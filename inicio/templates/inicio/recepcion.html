@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Recepción</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css"%}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+
+  </head>
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+    <nav>
+      <div class="nav-wrapper grey lighten-2">
+
+        <div class="left grey-text text-darken-4 tipoUs">
+          <a href="#" class="grey-text text-darken-4">Logo</a>
+          <div class="linea"></div>
+          {% if admin %}
+          <p>Administrador</p>
+          {% else %}
+          <p>Personal</p>
+          {% endif %}
+        </div>
+
+        <div class="col right salir">
+  				<form class="" method="post">{% csrf_token %}
+            <input type="text" name="salir" value="True" style="display:none" >
+  				  <button class="btn waves-effect waves-light" type="submit">Salir</button>
+  				</form>
+  			</div>
+      </div>
+    </nav>
+
+    <section class="container">
+
+
+  		<div class="row center">
+
+  			<div class="col l8 m12 s12 offset-l2 ">
+
+          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="select input-field col s12 m12 l12">
+              <label for="">Productor:</label>
+              {{form.Productor}}
+            </div>
+            <div class="select input-field col s12 m12 l12">
+              <label for="">Calidad Aproximada:</label>
+              {{form.calidad_aprox}}
+            </div>
+            <div class="select input-field col s12 m12 l12">
+              <label for="">Firma:</label>
+              {{form.firma}}
+            </div>
+            <div class="select input-field col s12 m12 l12">
+              <label for="">Status:</label>
+              {{form.status}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Representante:</label>
+              {{form.representante}}
+            </div>
+            <div class="select input-field col s12 m12 l12">
+              <label for="">Empleado:</label>
+              {{form.Empleado}}
+            </div>
+            {{form1.as_p}}
+            {{form1.as_p}}
+
+            <input type="submit" name="" value="Enviar">
+          </form>
+
+  			</div>
+
+  		</div>
+
+  	</section>
+
+
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('select').material_select();
+      });
+    </script>
+  </body>
+</html>

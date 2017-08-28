@@ -1,0 +1,146 @@
+input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea {
+  background-color: #eaeaea !important;
+  border:none !important;
+  height:2rem;
+}
+
+input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea{
+  border-bottom:none !important;
+  box-shadow:none !important;
+}
+body{
+  background-color: #f9f9f9;
+}
+/*Empiezan estilos recepcion.html*/
+.centro{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.titulo{
+  /*position: absolute;
+  top:20%;
+  transform: translateX(50%);
+  right:50%;*/
+  color:#5bd7b8;
+  margin-bottom: 30px;
+}
+
+.appName{
+  margin: 0;
+  font-size: 3rem !important;
+}
+
+.appName:nth-child(2){
+  margin: -10px 0 0 0;
+  font-size: 3rem !important;
+}
+
+.inicioSes{
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  color: #585858;
+}
+
+.reCont{
+  margin-top: 100px;
+}
+
+/*
+Terminan estilos recepcion.html
+Inicia estilos inicio.html*/
+
+.tipoUs{
+  margin: 0 0 0 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 100%;
+}
+
+.tipoUs .linea {
+  margin: auto 10px;
+  height: 80%;
+  border: 1px solid gray;
+}
+
+.tipoUs p{
+    margin: 0 ;
+}
+
+.salir{
+  margin-right: 10px;
+}
+
+.nomBienv{
+  margin: 20px 0;
+}
+
+.btn-accion{
+  width: 30%;
+  height: auto !important;
+  min-height: 100%;
+  padding: 10px 5px;
+}
+
+.btn-accion i{
+  width: 100%;
+  font-size:4rem;
+  line-height: initial !important;
+}
+
+.pendientes {
+  margin: 30px 0;
+}
+
+.problemas{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.problemas .texto{
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.problemas .boton{
+  width: 40%;
+}
+
+.problemas .boton a{
+  height: auto;
+}
+.select{
+  display: flex;
+  flex-direction: row;
+  position: initial;
+}
+.select>label{
+  position: initial;
+  font-size: 1rem;
+  line-height: 2rem;
+}
+.text{
+  display: flex;
+  flex-direction: row;
+  position: initial;
+}
+
+.text label{
+  position: initial;
+  font-size: 1rem;
+  line-height: 2rem;
+}
+.text label.active{
+  font-size: 1rem !important;
+  transform: none !important;
+}
