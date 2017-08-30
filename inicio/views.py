@@ -13,19 +13,23 @@ from .models import ProductoCampo, Caja
 def nuevaRecepcion(request):
     message=None;
     form = NuevaRecepcion()
-    form1 = NuevaCaja()
+    form1 = NuevaCaja
     if request.method == "POST":
         form = NuevaRecepcion(request.POST, request.FILES)
         form1 = NuevaCaja(request.POST)
-        if form.is_valid() and form1.is_valid():
-            m=form.save()
-            m.fecha_recepcion=datetime.datetime.now()
-            m.save()
-            #c=Caja(peso_neto=form1.peso_neto,color=form1.color,cantidad=form1.cantidad)
-            print(form1)
+        if form.is_valid():
+            #m=form.save()
+            #m.fecha_recepcion=datetime.datetime.now()
+            #m.save()
+            context={'message':message, 'form':form1}
+            return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
 
-    context={'message':message, 'form':form, 'form1':form1}
-    print(datetime.datetime.now())
+        if form1.is_valid():
+            form1=NuevaCaja()
+            context={'message':message, 'form':form1}
+            return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
+
+    context={'message':message, 'form':form}
     return HttpResponse(render(request, 'inicio/recepcion.html', context))
 
 
