@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'NaturalMexico.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST':'localhost',
+        'HOST':'127.0.0.1',
         'NAME': 'natmex',
-        'USER':'root',
-        'PASSWORD':'pass',
+        'USER':'prueba',
+        'PASSWORD':'y0s0yp0ll0',
         'OPTIONS':{
             'init_command': 'SET default_storage_engine=INNODB',
         },

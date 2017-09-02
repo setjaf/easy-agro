@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Recepción</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css"%}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+
+  </head>
+
+  <body>
+
+    <nav>
+      <div class="nav-wrapper grey lighten-2">
+
+        <div class="left grey-text text-darken-4 tipoUs">
+          <a href="#" class="grey-text text-darken-4">Logo</a>
+          <div class="linea"></div>
+          {% if admin %}
+          <p>Administrador</p>
+          {% else %}
+          <p>Personal</p>
+          {% endif %}
+        </div>
+
+        <div class="col right salir">
+  				<form class="" method="post">{% csrf_token %}
+            <input type="text" name="salir" value="True" style="display:none" >
+  				  <button class="btn waves-effect waves-light" type="submit">Salir</button>
+  				</form>
+  			</div>
+      </div>
+    </nav>
+
+
+    <section class="container">
+
+      <div class="row center">
+
+        <div class="col m12 s12 l8 offset-l2 nomBienv">
+          <h5>¡Hola! <b>{{nombre}}</b></h5>
+        </div>
+
+        <div class="col m12 s12 l8 offset-l2">
+
+          {% if admin %}
+          <a class="waves-effect waves-light btn btn-accion"><i class="material-icons">assignment</i>Corridas</a>
+          <a class="waves-effect waves-light btn btn-accion pink darken-1"><i class="material-icons">assignment_turned_in</i>Precios</a>
+          <a class="waves-effect waves-light btn btn-accion light-green darken-1"><i class="material-icons">list</i>Órdenes de compra</a>
+
+          {% else %}
+          <a class="waves-effect waves-light btn btn-accion" href="{% url 'nuevaRecepcion' %}"><i class="material-icons">assignment</i>Realizar Recepcion</a>
+          <a class="waves-effect waves-light btn btn-accion pink darken-1"><i class="material-icons">assignment_turned_in</i>Terminar Corrida</a>
+          <a class="waves-effect waves-light btn btn-accion light-green darken-1"><i class="material-icons">list</i>Ver mis Corridas</a>
+          {% endif %}
+
+        </div>
+
+        <div class="col m12 s12 l8 offset-l2 pendientes">
+
+          <h6>Pendientes hoy:</h6>
+
+          <ul>
+            <li><div class="col m12 s12 l12 offset-l2" style="background-color:#e4e4e4; height:20px; margin:10px 0;"></div></li>
+            <li><div class="col m12 s12 l12 offset-l2" style="background-color:#e4e4e4; height:20px; margin:10px 0;"></div></li>
+            <li><div class="col m12 s12 l12 offset-l2" style="background-color:#e4e4e4; height:20px; margin:10px 0;"></div></li>
+          </ul>
+
+        </div>
+
+        <div class="col m12 s12 l8 offset-l2 red lighten-2 problemas">
+          <div class="texto">
+            <i class="material-icons">report_problem</i>
+            <h5>Reportar un problema</h5>
+          </div>
+          <div class="boton">
+            <a class="waves-effect waves-light btn red darken-1">Aquí</a>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  </body>
+</html>

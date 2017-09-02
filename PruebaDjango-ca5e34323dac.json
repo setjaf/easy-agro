@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pruebadjango-178220",
+  "private_key_id": "ca5e34323dac3ca76ce838cbb8fbe925b44e56de",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCcKRPV2WwUISkO\nAbp6wMYxEiC8b8SJsDJdRyTrITBWD5Yag1+Q4uNFKZJHd+mOT+LjsFDl8tJCnOwY\n/HKGbceP2HeiYtBH6hjE8p8eET0fKdlHEqYZsOyhm3OKj1HAJLHuVN3Tls18wWhl\nXg07G5WNjgA2hDaBLCf6R5Bh1HJMWNfSOTbwQGnbzAxW1Ri2e3dqEIZs6H1yH7Hs\nJlh3ZyvIaYs9nVLJZmASojVazeXL7rbD7Tzx3miG1Ae2gDeGH2BN/ySdXzVvkXfL\n43ElA3bdX+AMpf3/4w2KG+qc8BihnVVCR6CFWVfMH1kCE5XQdckxHO8ZinlHPPMb\nKBlLMdS/AgMBAAECggEASsidOCc0S/uJZqzLOigBgdR1muhHjcy0gdklQ/kT5dL3\nBmFtrbwKLL/4zoMNdVqqhHGWfFip+r6djmWvDtOZ4zg+KqT5q8be78plCwgkZj0r\nUY8LvnftCoOgdHWoJ8Uq9MDtrnukkp8ouIqu+WR/XVfooDL2yytzRbdp3H/Z8NdH\nibGdeMKaG2CX1relzJOma6Ki30Qf+H0QoCsWj2plIjMLuOXY56pBRQ7mJSt5s4Hu\n68eTS4aV4yu9qXfcgXYe6jOoHzv3I/+mwSLGYzhBItUBCI05/azYsmgemI63+bNa\ndKBwHl00Ss7RTpZuHdZjd9OyRVzYip62R+6b23Z4oQKBgQDNTtKZji/1mQg7Ld0t\nLb1absJR5pgPXw8RGMrjL0tiz8bu34yxNtj9tOPocT8rjjeHQM/DWph3AhDnUaq/\nRhLJPJzRg6gZi6F517w+DjTShfuoAu83nReg1tovIM6lgVZV1gJgF9Flx4YRmMmY\n4ElA5rN3f4EwUn3QAzUJi7x9bwKBgQDCt7moTUnUdCPm5TCfJOy2e0CDlK+5N7zK\nxiEbW39d0bOV7qWoJIQo02lUbJUsIlQBB3ReTCzErtA4MZB4zV4+kHx7D7KzhEjp\nMDcXw5QZFIuwyT+7EKx1YH/vkYX2DhXHUA6gvpk1OK/bHml96zwogx/mipYe1Kn8\nxqbjITsVsQKBgC2YsucNkBMwgIZ8IiH1hZc/AAMmfmDzkKoQYobgKxLv6FOG7H0z\nHDAEa5VlCU2IEUcFmt7dEP1lRRHKrmw6iNOOlZlmbv/1ZdBknFb/2rViskhXFn+4\ncNX0wZIz7BEPz3fSxsZGo+fBz0G7OBKuxTYXxoXkmHF98JkxDSdolF0bAoGAGWly\n4GUd0o1JtjOJEev2vKX/OGzqNgjxKaGL5o8dYzgf8NxRYE1LtixJHcyB912PiwbX\nCAt2+EA8Smkliq56sz2WEVVuJAGKpmw1dHOA23kT9gF9wMMfTr5GVBSw3/jcnMN0\n9UOKqSh5wuYILHfLxRm/yw2hI+rrOGMQmqnWlTECgYB8j8fcgJJMvl/usz7cXctd\n1Tx8IFwBW2tR8QgZSiTH5wp8/QESF4Cc7sso8a5tnDOxDirTSLu6KvbQxGFXC46P\nBV2R6hJJinCKxInvbJcpsZlxDZiKt6JZ7pOp9DjVyQha+/rcqzzE1WNVd6TIjKny\nmO0q2o03CNwIxeUIcdSUpA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "pruebasetsql@pruebadjango-178220.iam.gserviceaccount.com",
+  "client_id": "107249895141276947156",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pruebasetsql%40pruebadjango-178220.iam.gserviceaccount.com"
+}
