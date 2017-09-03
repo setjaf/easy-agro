@@ -9,8 +9,8 @@ from django.template import RequestContext, loader
 from inicio.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 
-from inicio.form import NuevaRecepcion, NuevaCaja
-from .models import ProductoCampo, Caja, Empleado
+from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba
+from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba
 
 def index(request):
     #Se inicializa la variable mensaje con None para  no mostrar mensaje el la primera petición
@@ -63,7 +63,10 @@ def index(request):
 def nuevaRecepcion(request):
     message=None;
     form = NuevaRecepcion()
-    form1 = NuevaCaja
+    form1 = NuevaCaja()
+    form2 = NuevaPrueba()
+    form3 = NuevaPrueba()
+    form4 = NuevaPrueba()
     if request.user.is_authenticated:
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
@@ -77,17 +80,47 @@ def nuevaRecepcion(request):
             #Inicia proceso de registro de recepción
             form = NuevaRecepcion(request.POST, request.FILES)
             form1 = NuevaCaja(request.POST)
+            form2 = NuevaPrueba(request.POST)
+            form3 = NuevaPrueba(request.POST)
+            form4 = NuevaPrueba(request.POST)
+            print(request.POST['kilogramos'])
             if form.is_valid():
-                #m=form.save()
-                #m.fecha_recepcion=datetime.datetime.now()
-                #m.save()
-                context={'message':message, 'form':form1}
+                '''p=ProductoCampo(
+                    calidad_aprox=request.POST['calidad_aprox'],
+                    fecha_recepcion=datetime.datetime.now(),
+                    firma=request.POST['firma'],
+                    status=request.POST['status'],
+                    representante = request.POST['representante'],
+                    Productor= Productor.objects.get(pk=request.POST['Productor']),
+                    Empleado = Empleado.objects.get(usuario=request.user.id)
+                )
+                p.save()'''
+                context={'message':message, 'form':form1, 'form1':form2,  'form2':form3, 'form3':form4, 'recepcion':'p.IDProductoCampo'}
                 return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
 
-            if form1.is_valid():
-                form1=NuevaCaja()
-                context={'message':message, 'form':form1}
-                return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
+            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+                '''c=Caja(
+                    peso_neto=request.POST['peso_neto'],
+                    color=request.POST['color'],
+                    cantidad=request.POST['cantidad'],
+                    tamanio=request.POST['tamanio'],
+                    alto=request.POST['alto'],
+                    ancho=request.POST['ancho'],
+                    largo=request.POST['largo'],
+                    ProductoCampo=ProductoCampo.objects.get(pk=request.POST['recepcion'])
+                )
+                c.save()
+                m=Prueba(
+                    kilogramos=request.POST['kilogramos']
+
+                )'''
+                print(request.POST['kilogramos'])
+                if "sigue" in request.POST:
+                    print("sigue")
+
+                    context={'message':message, 'form':form1, 'form1':form2,  'form2':form3, 'form3':form4 }
+                    return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
+                return redirect('/')
 
         context={'message':message, 'form':form}
         return HttpResponse(render(request, 'inicio/recepcion.html', context))

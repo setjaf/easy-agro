@@ -124,10 +124,18 @@ Inicia estilos inicio.html*/
   flex-direction: row;
   position: initial;
 }
+.select>.select-wrapper>span{
+  display: none;
+}
 .select>label{
   position: initial;
   font-size: 1rem;
   line-height: 2rem;
+  color:black;
+  margin-right: 1rem;
+}
+.dropdown-content li>span{
+  font-size: .9rem !important;
 }
 .text{
   display: flex;
@@ -139,8 +147,16 @@ Inicia estilos inicio.html*/
   position: initial;
   font-size: 1rem;
   line-height: 2rem;
+  color:black;
+  margin-right: 1rem;
 }
 .text label.active{
   font-size: 1rem !important;
   transform: none !important;
+}
+.titRec{
+  font-size: 3.5rem !important;
+}
+.titRec>span{
+  color:#26a69a;
 }

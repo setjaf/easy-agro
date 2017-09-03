@@ -45,7 +45,8 @@
 
   			<div class="col l8 m12 s12 offset-l2 ">
 
-          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+          <form id="caja" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <input type="hidden" name="recepcion" value={{recepcion}}>
             <div class="select input-field col s12 m12 l12">
               <label for="">Peso Neto:</label>
               {{form.peso_neto}}
@@ -74,7 +75,20 @@
               <label for="">Largo:</label>
               {{form.largo}}
             </div>
-            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Enviar</button>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Kilogramos:</label>
+              {{form1.kilogramos}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Kilogramos:</label>
+              {{form2.kilogramos}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Kilogramos:</label>
+              {{form3.kilogramos}}
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" value="Enviar">Enviar y Finalizar</button>
+            <button class="btn waves-effect waves-light" id="enviarCont" value="Enviar">Enviar y agregar caja</button>
           </form>
 
   			</div>
@@ -82,8 +96,6 @@
   		</div>
 
   	</section>
-
-
 
     <script type="text/javascript">
       $(document).ready(function() {
@@ -93,6 +105,11 @@
               // do your stuff what you need.
               $('form').submit();
         });
+
+        $("#enviarCont").click(function() {
+            $('#caja').append("<input type=\"hidden\" name=\"sigue\" value=\"True\">")
+            $('#caja').submit();
+        })
       });
     </script>
   </body>

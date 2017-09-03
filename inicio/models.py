@@ -17,7 +17,7 @@ from .managers import UserManager
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=200,unique=True)
-    email = models.EmailField(_('email address'), unique=True)
+    email = models.EmailField(_('email address'))
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff'), default=False)
