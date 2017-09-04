@@ -137,16 +137,11 @@ class Caja(models.Model):
     largo = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=False)
     ProductoCampo = models.ForeignKey('ProductoCampo',on_delete=models.CASCADE, unique=False, null=False, blank=False)
 
-
-    def __str__(self):
-        return self.ID
-
 class Prueba(models.Model):
     IDPrueba = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     kilogramos = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=False)
     Caja = models.ForeignKey('Caja',on_delete=models.CASCADE,unique=False, null=False, blank=False)
-    def __str__(self):
-        return self.kilogramos
+
 
 class Detalle(models.Model):
     ID = models.AutoField(primary_key=True, null=False)
@@ -154,8 +149,6 @@ class Detalle(models.Model):
     Producto = models.ForeignKey('Producto',on_delete=models.CASCADE,unique=False, null=False, blank=False)
     OrdenCompra = models.ForeignKey('OrdenCompra',on_delete=models.CASCADE,unique=False, null=False, blank=False)
 
-    def __str__(self):
-        return self.cantidad_cajas
 
 class OrdenCompra(models.Model):
     ID = models.AutoField(primary_key=True, null=False)
@@ -165,8 +158,6 @@ class OrdenCompra(models.Model):
     pagado = models.BooleanField(default=False, null=False)
     Cliente = models.ForeignKey('Cliente',on_delete=models.CASCADE,unique=False, null=False, blank=False)
 
-    def __str__(self):
-        return self.kilogramos
 
 class Cliente(models.Model):
     IDCliente = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)

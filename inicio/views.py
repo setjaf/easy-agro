@@ -64,9 +64,6 @@ def nuevaRecepcion(request):
     message=None;
     form = NuevaRecepcion()
     form1 = NuevaCaja()
-    form2 = NuevaPrueba()
-    form3 = NuevaPrueba()
-    form4 = NuevaPrueba()
     if request.user.is_authenticated:
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
@@ -80,12 +77,8 @@ def nuevaRecepcion(request):
             #Inicia proceso de registro de recepción
             form = NuevaRecepcion(request.POST, request.FILES)
             form1 = NuevaCaja(request.POST)
-            form2 = NuevaPrueba(request.POST)
-            form3 = NuevaPrueba(request.POST)
-            form4 = NuevaPrueba(request.POST)
-            print(request.POST['kilogramos'])
             if form.is_valid():
-                '''p=ProductoCampo(
+                p=ProductoCampo(
                     calidad_aprox=request.POST['calidad_aprox'],
                     fecha_recepcion=datetime.datetime.now(),
                     firma=request.POST['firma'],
@@ -94,12 +87,12 @@ def nuevaRecepcion(request):
                     Productor= Productor.objects.get(pk=request.POST['Productor']),
                     Empleado = Empleado.objects.get(usuario=request.user.id)
                 )
-                p.save()'''
-                context={'message':message, 'form':form1, 'form1':form2,  'form2':form3, 'form3':form4, 'recepcion':'p.IDProductoCampo'}
+                p.save()
+                context={'message':message, 'form':form1, 'recepcion':p.IDProductoCampo}
                 return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
 
-            if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
-                '''c=Caja(
+            if form1.is_valid():
+                c=Caja(
                     peso_neto=request.POST['peso_neto'],
                     color=request.POST['color'],
                     cantidad=request.POST['cantidad'],
@@ -111,14 +104,23 @@ def nuevaRecepcion(request):
                 )
                 c.save()
                 m=Prueba(
-                    kilogramos=request.POST['kilogramos']
-
-                )'''
-                print(request.POST['kilogramos'])
+                    kilogramos=request.POST['kilogramos'],
+                    Caja = c
+                )
+                m.save()
+                m=Prueba(
+                    kilogramos=request.POST['kilogramos1'],
+                    Caja = c
+                )
+                m.save()
+                m=Prueba(
+                    kilogramos=request.POST['kilogramos2'],
+                    Caja = c
+                )
+                m.save()
                 if "sigue" in request.POST:
-                    print("sigue")
-
-                    context={'message':message, 'form':form1, 'form1':form2,  'form2':form3, 'form3':form4 }
+                    form1 = NuevaCaja()
+                    context={'message':message, 'form':form1 }
                     return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
                 return redirect('/')
 
