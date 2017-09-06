@@ -9,7 +9,7 @@ from django.template import RequestContext, loader
 from inicio.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 
-from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba
+from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor
 from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba
 
 def index(request):
@@ -64,6 +64,13 @@ def nuevaRecepcion(request):
     message=None;
     form = NuevaRecepcion()
     form1 = NuevaCaja()
+    form2 = filtroProductor()
+    choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
+    choices.insert(0, ("---------","---------"))
+    form2.fields["localidad"].choices = choices
+    choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
+    choices.insert(0, ("---------","---------"))
+    form2.fields["municipio"].choices = choices
     if request.user.is_authenticated:
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
@@ -81,12 +88,13 @@ def nuevaRecepcion(request):
                 p=ProductoCampo(
                     calidad_aprox=request.POST['calidad_aprox'],
                     fecha_recepcion=datetime.datetime.now(),
-                    firma=request.POST['firma'],
                     status=request.POST['status'],
                     representante = request.POST['representante'],
                     Productor= Productor.objects.get(pk=request.POST['Productor']),
                     Empleado = Empleado.objects.get(usuario=request.user.id)
                 )
+                if "firma" in request.FILES:
+                    p.firma=request.FILES['firma']
                 p.save()
                 context={'message':message, 'form':form1, 'recepcion':p.IDProductoCampo}
                 return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
@@ -124,7 +132,16 @@ def nuevaRecepcion(request):
                     return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
                 return redirect('/')
 
-        context={'message':message, 'form':form}
+            if ("localidad" in request.POST) and ("municipio" in request.POST):
+                if request.POST['localidad']=='---------':
+                    form.fields["Productor"].queryset = Productor.objects.filter(municipio=request.POST['municipio'])
+                elif request.POST['municipio']=='---------':
+                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'])
+                else:
+                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
+                form2.fields["localidad"].initial=request.POST['localidad']
+                form2.fields["municipio"].initial=request.POST['municipio']
+        context={'message':message, 'form':form, 'form1':form2}
         return HttpResponse(render(request, 'inicio/recepcion.html', context))
 
     return redirect('/')

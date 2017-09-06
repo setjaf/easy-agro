@@ -46,7 +46,19 @@
           <h1 class="titRec">Recepción<span>/limón</span></h1>
         </div>
   			<div class="col l10 m12 s12 offset-l1 ">
+          <form class="" id="filtro" method="post">{% csrf_token %}
 
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Localidad:</label>
+              {{form1.localidad}}
+            </div>
+
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Municipio:</label>
+              {{form1.municipio}}
+            </div>
+
+          </form>
           <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="select input-field col s12 m6 l6">
               <label for="">Productor:</label>
@@ -68,7 +80,7 @@
               <label for="">Representante:</label>
               {{form.representante}}
             </div>
-            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Enviar</button>
+            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
           </form>
 
   			</div>
@@ -83,6 +95,12 @@
       $(document).ready(function() {
         $('select').material_select();
       });
+      $("#loc").change(function() {
+        $("#filtro").submit();
+      })
+      $("#mun").change(function() {
+        $("#filtro").submit();
+      })
     </script>
   </body>
 </html>
