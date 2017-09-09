@@ -61,8 +61,18 @@ def index(request):
 
 def nuevaCorrida(request):
     message=None
+    form1 = filtroProductor()
+    choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
+    choices.insert(0, ("---------","---------"))
+    form1.fields["localidad"].choices = choices
+    choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
+    choices.insert(0, ("---------","---------"))
+    form1.fields["municipio"].choices = choices
+
     form = NuevaCorrida()
     form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+    form.fields['ProductoCampo'].queryset=ProductoCampo.objects.exclude(status='t')
+
     if request.user.is_authenticated:
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
@@ -75,22 +85,33 @@ def nuevaCorrida(request):
 
             #Inicia proceso de registro de recepción
             form = NuevaCorrida(request.POST)
-
+            print(request.POST)
+            print(form.is_valid())
             if form.is_valid():
                 form.save()
                 return redirect('/')
 
             form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+
             if ("localidad" in request.POST) and ("municipio" in request.POST):
                 if request.POST['localidad']=='---------':
-                    form.fields["Productor"].queryset = Productor.objects.filter(municipio=request.POST['municipio'])
+                    prod = Productor.objects.filter(municipio=request.POST['municipio'])
                 elif request.POST['municipio']=='---------':
-                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'])
+                    prod = Productor.objects.filter(localidad=request.POST['localidad'])
                 else:
-                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
-                form2.fields["localidad"].initial=request.POST['localidad']
-                form2.fields["municipio"].initial=request.POST['municipio']
-        context={'message':message, 'form':form}
+                    prod = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
+
+                lpc=[]
+                for p in prod:
+                    pc=ProductoCampo.objects.filter(Productor=p)
+                    if pc and pc[0].status!='t':
+                        lpc.append((pc[0].IDProductoCampo,pc[0]))
+                lpc.insert(0, ("---------","---------"))
+                form.fields["ProductoCampo"].choices = lpc
+                #form.fields["ProductoCampo"].queryset = pg.exclude(status='t')
+                form1.fields["localidad"].initial=request.POST['localidad']
+                form1.fields["municipio"].initial=request.POST['municipio']
+        context={'message':message, 'form':form, 'form1':form1}
         return HttpResponse(render(request, 'inicio/corrida.html', context))
 
     return redirect('/')

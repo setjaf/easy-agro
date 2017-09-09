@@ -45,16 +45,37 @@
         <div class="col l10 m12 s12 offset-l1 left-align">
           <h1 class="titRec">Corrida<span>/limón</span></h1>
         </div>
-  			<div class="col l10 m12 s12 offset-l1 ">
 
-          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="text input-field col s12 m12 l12">
+  			<div class="col l10 m12 s12 offset-l1 ">
+          <form class="" id="filtro" method="post">{% csrf_token %}
+
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Localidad:</label>
+              {{form1.localidad}}
+            </div>
+
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Municipio:</label>
+              {{form1.municipio}}
+            </div>
+
+          </form>
+          <form class="" action="" id="corrida" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Recepcion:</label>
+              {{form.ProductoCampo}}
+            </div>
+            <div class="text input-field col s12 m6 l6">
               <label for="">Calibre:</label>
               {{form.calibre}}
             </div>
-            <div class="text input-field col s12 m12 l12">
+            <div class="text input-field col s12 m6 l6">
               <label for="">Kilogramos:</label>
               {{form.kilogramos}}
+            </div>
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Producto:</label>
+              {{form.Producto}}
             </div>
             <div class="text input-field col s12 m12 l12">
               <label for="">Fecha Compra:</label>
@@ -67,14 +88,6 @@
             <div class="select input-field col s12 m6 l6">
               <label for="">Status:</label>
               {{form.status}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Producto:</label>
-              {{form.Producto}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Recepcion:</label>
-              {{form.ProductoCampo}}
             </div>
 
             <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
@@ -107,6 +120,12 @@
         closeOnSelect: false // Close upon selecting a date,
       });
 
+      $("#loc").change(function() {
+        $("#filtro").submit();
+      })
+      $("#mun").change(function() {
+        $("#filtro").submit();
+      })
     </script>
   </body>
 </html>
