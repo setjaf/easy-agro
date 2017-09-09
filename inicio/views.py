@@ -9,7 +9,7 @@ from django.template import RequestContext, loader
 from inicio.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 
-from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor
+from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, NuevaCorrida
 from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba
 
 def index(request):
@@ -59,6 +59,41 @@ def index(request):
     context={'message':message, 'form':form}
     return HttpResponse(render(request, 'inicio/login.html', context))
 
+def nuevaCorrida(request):
+    message=None
+    form = NuevaCorrida()
+    form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+    if request.user.is_authenticated:
+        #Se verifica si el metodo de envio fue post
+        if request.method == "POST":
+            #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
+            if "salir" in request.POST:
+                #Si nos estan mandando la informacion correcta realizamos el proceso del logout
+                logout(request)
+                #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
+                return redirect('/')
+
+            #Inicia proceso de registro de recepción
+            form = NuevaCorrida(request.POST)
+
+            if form.is_valid():
+                form.save()
+                return redirect('/')
+
+            form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+            if ("localidad" in request.POST) and ("municipio" in request.POST):
+                if request.POST['localidad']=='---------':
+                    form.fields["Productor"].queryset = Productor.objects.filter(municipio=request.POST['municipio'])
+                elif request.POST['municipio']=='---------':
+                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'])
+                else:
+                    form.fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
+                form2.fields["localidad"].initial=request.POST['localidad']
+                form2.fields["municipio"].initial=request.POST['municipio']
+        context={'message':message, 'form':form}
+        return HttpResponse(render(request, 'inicio/corrida.html', context))
+
+    return redirect('/')
 
 def nuevaRecepcion(request):
     message=None;
@@ -128,7 +163,7 @@ def nuevaRecepcion(request):
                 m.save()
                 if "sigue" in request.POST:
                     form1 = NuevaCaja()
-                    context={'message':message, 'form':form1 }
+                    context={'message':message, 'form':form1, 'recepcion':request.POST['recepcion'] }
                     return HttpResponse(render(request, 'inicio/recepcionCaja.html', context))
                 return redirect('/')
 

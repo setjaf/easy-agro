@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Corrida</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css"%}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+
+  </head>
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+    <nav>
+      <div class="nav-wrapper grey lighten-2">
+
+        <div class="left grey-text text-darken-4 tipoUs">
+          <a href="{% url 'index' %}" class="grey-text text-darken-4">Logo</a>
+          <div class="linea"></div>
+          {% if admin %}
+          <p>Administrador</p>
+          {% else %}
+          <p>Personal</p>
+          {% endif %}
+        </div>
+
+        <div class="col right salir">
+  				<form class="" method="post">{% csrf_token %}
+            <input type="text" name="salir" value="True" style="display:none" >
+  				  <button class="btn waves-effect waves-light" type="submit">Salir</button>
+  				</form>
+  			</div>
+      </div>
+    </nav>
+
+    <section class="container">
+
+
+  		<div class="row center">
+        <div class="col l10 m12 s12 offset-l1 left-align">
+          <h1 class="titRec">Corrida<span>/limón</span></h1>
+        </div>
+  			<div class="col l10 m12 s12 offset-l1 ">
+
+          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Calibre:</label>
+              {{form.calibre}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Kilogramos:</label>
+              {{form.kilogramos}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Fecha Compra:</label>
+              {{form.fecha_compra}}
+            </div>
+            <div class="text input-field col s12 m12 l12">
+              <label for="">Folio:</label>
+              {{form.folio}}
+            </div>
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Status:</label>
+              {{form.status}}
+            </div>
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Producto:</label>
+              {{form.Producto}}
+            </div>
+            <div class="select input-field col s12 m6 l6">
+              <label for="">Recepcion:</label>
+              {{form.ProductoCampo}}
+            </div>
+
+            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
+          </form>
+
+  			</div>
+
+  		</div>
+
+  	</section>
+
+
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('select').material_select();
+      });
+      $(document).on('submit','form',function() {
+        $("#id_fecha_compra").val($("input[name='fecha_compra_submit']").val())
+      })
+      $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15, // Creates a dropdown of 15 years to control year,
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mer', 'Jue', 'Vier', 'Sab'],
+        formatSubmit: 'yyyy-mm-dd',
+        today: 'Today',
+        clear: 'Clear',
+        close: 'Ok',
+        closeOnSelect: false // Close upon selecting a date,
+      });
+
+    </script>
+  </body>
+</html>

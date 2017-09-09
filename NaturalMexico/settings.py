@@ -79,13 +79,27 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST':'127.0.0.1',
         'NAME': 'natmex',
+        'USER':'root',
+        'PASSWORD':'pass',
+        'OPTIONS':{
+            'init_command': 'SET default_storage_engine=INNODB',
+        },
+    }
+}
+
+
+'''DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST':'127.0.0.1',
+        'NAME': 'natmex',
         'USER':'prueba',
         'PASSWORD':'y0s0yp0ll0',
         'OPTIONS':{
             'init_command': 'SET default_storage_engine=INNODB',
         },
     }
-}
+}'''
 
 
 # Password validation
@@ -118,7 +132,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

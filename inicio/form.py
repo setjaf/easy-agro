@@ -2,7 +2,7 @@ from django import forms
 from enumfields import EnumField
 from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from django.forms import ModelForm
-from inicio.models import ProductoCampo, Caja, Prueba, Productor
+from inicio.models import ProductoCampo, Caja, Prueba, Productor, ProductoCorrida
 
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class' : 'validate','id' : 'validate'}))
@@ -26,3 +26,8 @@ class NuevaPrueba(ModelForm):
     class Meta:
         model = Prueba
         fields = ['kilogramos']
+
+class NuevaCorrida(ModelForm):
+    class Meta:
+        model = ProductoCorrida
+        fields=['calibre','kilogramos','fecha_compra','status','folio','Producto','ProductoCampo']

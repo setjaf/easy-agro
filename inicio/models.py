@@ -97,23 +97,29 @@ class ProductoCampo(models.Model):
     Empleado = models.ForeignKey('Empleado',on_delete=models.CASCADE, unique=False, null=False, blank=False)
     Productor = models.ForeignKey('Productor',on_delete=models.CASCADE, unique=False, null=False, blank=False)
 
+    def __str__(self):
+        return self.Productor.nombre+" - "+self.fecha_recepcion.strftime('%x - %X')
+
+
 class Producto(models.Model):
     IDProducto = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     nombre = models.CharField(max_length=100, blank=True)
     descripcion = models.CharField(max_length=300, blank=True)
-
+    def __str__(self):
+        return self.nombre.encode('utf-8')
 
 class ProductoCorrida(models.Model):
     IDProductoCorrida = models.AutoField(primary_key=True, null=False)
     calibre = models.CharField(max_length=100, blank=False, null=False)
     kilogramos = models.DecimalField(max_digits=10, decimal_places=3, default=0, blank=False, null=False)
     fecha_inclusion = models.DateTimeField('dia_creado', auto_now_add=True)
-    fecha_compra = models.DateTimeField('dia_creado', auto_now_add=True)
+    fecha_compra = models.DateField('dia_creado', auto_now_add=False)
     status = EnumField(choices=[('t','Terminada'), ('p','En proceso'), ('e','Entregada')])
     folio = models.CharField(max_length=100, blank=False, null=False)
     Producto = models.ForeignKey('Producto',on_delete=models.CASCADE, unique=False, null=False, blank=False)
     ProductoCampo = models.ForeignKey('ProductoCampo',on_delete=models.CASCADE, unique=False, null=False, blank=False)
-    Detalle = models.ForeignKey('Detalle',on_delete=models.CASCADE,unique=False, null=False, blank=False)
+    Detalle = models.ForeignKey('Detalle',on_delete=models.CASCADE,unique=False, null=True, blank=True)
+
 
 
 class Precio(models.Model):

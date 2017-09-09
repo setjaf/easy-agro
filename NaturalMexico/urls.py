@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^', include('inicio.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^recepcion/', include('inicio.urlsR')),
+    url(r'^corrida/', include('inicio.urlsC')),
 ]

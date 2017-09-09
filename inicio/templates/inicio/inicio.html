@@ -20,7 +20,7 @@
       <div class="nav-wrapper grey lighten-2">
 
         <div class="left grey-text text-darken-4 tipoUs">
-          <a href="#" class="grey-text text-darken-4">Logo</a>
+          <a href="{% url 'index' %}" class="grey-text text-darken-4">Logo</a>
           <div class="linea"></div>
           {% if admin %}
           <p>Administrador</p>
@@ -56,8 +56,8 @@
 
           {% else %}
           <a class="waves-effect waves-light btn btn-accion" href="{% url 'nuevaRecepcion' %}"><i class="material-icons">assignment</i>Realizar Recepcion</a>
-          <a class="waves-effect waves-light btn btn-accion pink darken-1"><i class="material-icons">assignment_turned_in</i>Terminar Corrida</a>
-          <a class="waves-effect waves-light btn btn-accion light-green darken-1"><i class="material-icons">list</i>Ver mis Corridas</a>
+          <a class="waves-effect waves-light btn btn-accion light-green darken-1"><i class="material-icons">list</i>Ver mis recepciones</a>
+          <a class="waves-effect waves-light btn btn-accion pink darken-1" href="{% url 'nuevaCorrida' %}"><i class="material-icons">assignment_turned_in</i>Realizar Corrida</a>
           {% endif %}
 
         </div>
