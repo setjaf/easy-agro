@@ -85,8 +85,6 @@ def nuevaCorrida(request):
 
             #Inicia proceso de registro de recepción
             form = NuevaCorrida(request.POST)
-            print(request.POST)
-            print(form.is_valid())
             if form.is_valid():
                 form.save()
                 return redirect('/')

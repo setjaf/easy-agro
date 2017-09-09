@@ -17,7 +17,7 @@ from .managers import UserManager
 
 class Usuario(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=200,unique=True)
-    email = models.EmailField(_('email address'))
+    email = models.EmailField(_('email address'),unique=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff'), default=False)
@@ -26,13 +26,13 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        verbose_name = _('usuario')
+        verbose_name_plural = _('usuarios')
 
 
     def get_short_name(self):
