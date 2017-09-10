@@ -43,47 +43,14 @@
 
   		<div class="row center">
         <div class="col l10 m12 s12 offset-l1 left-align">
-          <h1 class="titRec">Recepción<span>/limón</span></h1>
+          <ul class="collection with-header">
+            <li class="collection-header"><h4 class="titRec">Recepción<span>/limón</span></h4></li>
+            {%for recepcion in pc%}
+              <li class="collection-item"><div>{{recepcion}}<a href="{% url 'modRecepcion' recepcion.IDProductoCampo %}" class="secondary-content"><i class="material-icons">send</i></a></div></li>
+            {%endfor%}
+          </ul>
         </div>
-  			<div class="col l10 m12 s12 offset-l1 ">
-          <form class="" id="filtro" method="post">{% csrf_token %}
 
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Localidad:</label>
-              {{form1.localidad}}
-            </div>
-
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Municipio:</label>
-              {{form1.municipio}}
-            </div>
-
-          </form>
-          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Productor:</label>
-              {{form.Productor}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Calidad Aproximada:</label>
-              {{form.calidad_aprox}}
-            </div>
-            <div class="select truncate input-field col s12 m6 l6">
-              <label for="">Firma:</label>
-              {{form.firma}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Status:</label>
-              {{form.status}}
-            </div>
-            <div class="text input-field col s12 m12 l12">
-              <label for="">Representante:</label>
-              {{form.representante}}
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
-          </form>
-
-  			</div>
 
   		</div>
 

@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from inicio.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
+from django.forms.models import model_to_dict
 
 from inicio.form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, NuevaCorrida
 from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba
@@ -32,7 +33,9 @@ def index(request):
         #Si el metodo no es POST, nos indica que debemos renderizar la página inicial de un usario autentificado, obtenemos la informacion del objeto Personal
         p=Empleado.objects.get(usuario=request.user.id)
         #Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
-        context={'nombre':p.nombre,'admin':request.user.is_admin,'personal':request.user.is_personal}
+        e = Empleado.objects.get(usuario=request.user)
+        pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
+        context={'nombre':p.nombre,'admin':request.user.is_admin,'personal':request.user.is_personal, 'pc':pc}
         #Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
         return HttpResponse(render(request, 'inicio/inicio.html',context))
 
@@ -47,7 +50,9 @@ def index(request):
                 message = 'Te has autentificado correctamente'
                 p=Empleado.objects.get(usuario=request.user.id)
                 #Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
-                context={'nombre':p.nombre,'admin':request.user.is_admin,'personal':request.user.is_personal}
+                e = Empleado.objects.get(usuario=request.user)
+                pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
+                context={'nombre':p.nombre,'admin':request.user.is_admin,'personal':request.user.is_personal,'pc':pc}
                 #Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
                 return HttpResponse(render(request, 'inicio/inicio.html',context))
             else:
@@ -60,20 +65,19 @@ def index(request):
     return HttpResponse(render(request, 'inicio/login.html', context))
 
 def nuevaCorrida(request):
-    message=None
-    form1 = filtroProductor()
-    choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
-    choices.insert(0, ("---------","---------"))
-    form1.fields["localidad"].choices = choices
-    choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
-    choices.insert(0, ("---------","---------"))
-    form1.fields["municipio"].choices = choices
-
-    form = NuevaCorrida()
-    form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
-    form.fields['ProductoCampo'].queryset=ProductoCampo.objects.exclude(status='t')
-
     if request.user.is_authenticated:
+        message=None
+        form1 = filtroProductor()
+        choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
+        choices.insert(0, ("---------","---------"))
+        form1.fields["localidad"].choices = choices
+        choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
+        choices.insert(0, ("---------","---------"))
+        form1.fields["municipio"].choices = choices
+
+        form = NuevaCorrida()
+        form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+        form.fields['ProductoCampo'].queryset=ProductoCampo.objects.exclude(status='t')
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
             #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
@@ -92,14 +96,17 @@ def nuevaCorrida(request):
             form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
 
             if ("localidad" in request.POST) and ("municipio" in request.POST):
-                if request.POST['localidad']=='---------':
+                if request.POST['localidad']=='---------' and request.POST['municipio']!='---------':
                     prod = Productor.objects.filter(municipio=request.POST['municipio'])
-                elif request.POST['municipio']=='---------':
+                elif request.POST['municipio']=='---------' and request.POST['localidad']!='---------':
                     prod = Productor.objects.filter(localidad=request.POST['localidad'])
-                else:
+                elif request.POST['municipio']!='---------' and request.POST['localidad']!='---------':
                     prod = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
-
+                else:
+                    print("else")
+                    prod = Productor.objects.all()
                 lpc=[]
+                print prod
                 for p in prod:
                     pc=ProductoCampo.objects.filter(Productor=p)
                     if pc and pc[0].status!='t':
@@ -115,17 +122,17 @@ def nuevaCorrida(request):
     return redirect('/')
 
 def nuevaRecepcion(request):
-    message=None;
-    form = NuevaRecepcion()
-    form1 = NuevaCaja()
-    form2 = filtroProductor()
-    choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
-    choices.insert(0, ("---------","---------"))
-    form2.fields["localidad"].choices = choices
-    choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
-    choices.insert(0, ("---------","---------"))
-    form2.fields["municipio"].choices = choices
     if request.user.is_authenticated:
+        message=None;
+        form = NuevaRecepcion()
+        form1 = NuevaCaja()
+        form2 = filtroProductor()
+        choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
+        choices.insert(0, ("---------","---------"))
+        form2.fields["localidad"].choices = choices
+        choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
+        choices.insert(0, ("---------","---------"))
+        form2.fields["municipio"].choices = choices
         #Se verifica si el metodo de envio fue post
         if request.method == "POST":
             #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
@@ -200,6 +207,50 @@ def nuevaRecepcion(request):
 
     return redirect('/')
 
+def listaRecepcion(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
+            if "salir" in request.POST:
+                #Si nos estan mandando la informacion correcta realizamos el proceso del logout
+                logout(request)
+                #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
+                return redirect('/')
+        e = Empleado.objects.get(usuario=request.user)
+        pc = ProductoCampo.objects.filter(Empleado=e)
+        context={'pc':pc}
+        return HttpResponse(render(request, 'inicio/recepcionLista.html', context))
+    return redirect('/')
+def modRecepcion(request,prodc_id):
+    if request.user.is_authenticated:
+        form = NuevaRecepcion()
+        #Se verifica si el metodo de envio fue post
+        if request.method == "POST":
+            #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
+            if "salir" in request.POST:
+                #Si nos estan mandando la informacion correcta realizamos el proceso del logout
+                logout(request)
+                #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
+                return redirect('/')
 
+            #Inicia proceso de registro de recepción
+            form = NuevaRecepcion(request.POST, request.FILES)
+            if form.is_valid():
+                p=ProductoCampo.objects.get(IDProductoCampo=prodc_id)
+                p.calidad_aprox=request.POST['calidad_aprox']
+                p.status=request.POST['status']
+                p.representante = request.POST['representante']
+                p.Empleado = Empleado.objects.get(usuario=request.user.id)
+
+                if "firma" in request.FILES:
+                    p.firma=request.FILES['firma']
+                p.save()
+                return redirect('/recepcion')
+        pc=ProductoCampo.objects.get(IDProductoCampo=prodc_id)
+        form = NuevaRecepcion(model_to_dict(pc))
+        context={'form':form}
+        return HttpResponse(render(request, 'inicio/recepcionMod.html', context))
+
+    return redirect('/')
 
 # Create your views here.
