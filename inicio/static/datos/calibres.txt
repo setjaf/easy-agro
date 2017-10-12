@@ -1,0 +1,13 @@
+{
+  "segundas":"SEGUNDAS",
+  "torreon":"TORREON",
+  "terceras":"TERCERAS",
+  "coleado":"COLEADO",
+  "250":"205",
+  "230":"230",
+  "200":"200",
+  "175":"175",
+  "150":"150",
+  "110":"110",
+
+}

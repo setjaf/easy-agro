@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import url
-from . import views
+from . import viewsAdmin
 
 urlpatterns=[
-    url(r'^$', views.index, name='index'),
-    url(r'^prueba/$', views.prueba, name='prueba')
+    url(r'^nuevo/$', viewsAdmin.nuevoEmpleado, name='nuevoEmpleado'),
     #url(r'^otra/$',views.otra,name='otra')
 ]

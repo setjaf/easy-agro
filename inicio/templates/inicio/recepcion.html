@@ -45,45 +45,92 @@
         <div class="col l10 m12 s12 offset-l1 left-align">
           <h1 class="titRec">Recepción<span>/limón</span></h1>
         </div>
-  			<div class="col l10 m12 s12 offset-l1 ">
-          <form class="" id="filtro" method="post">{% csrf_token %}
+        <div class="col m12 s12 l8 offset-l2">
+          <div class="col l12 m12 s12">
+            <form class="" id="filtro" method="post">{% csrf_token %}
+              <h5>Encontrar Productor</h5>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Localidad:</label>
+                {{form1.localidad}}
+              </div>
 
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Localidad:</label>
-              {{form1.localidad}}
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Municipio:</label>
+                {{form1.municipio}}
+              </div>
+
+            </form>
+          </div>
+          <form method="post" id="recepcion" enctype="multipart/form-data">{% csrf_token %}
+            <div class="col s12 m12 l12">
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Productor:</label>
+                {{form.recepcion.Productor}}
+              </div>
+              <div class="col l12 m12 s12">
+                <h5>Información Recepcion</h5>
+              </div>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Calidad Aproximada:</label>
+                {{form.recepcion.calidad_aprox}}
+              </div>
+              <div class="select truncate input-field col s12 m6 l6">
+                <label for="">Firma:</label>
+                {{form.recepcion.firma}}
+              </div>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Status:</label>
+                {{form.status.estado}}
+              </div>
+              <div class="text input-field col s12 m6 l6">
+                <label for="">Representante:</label>
+                {{form.recepcion.representante}}
+              </div>
             </div>
+            {%for form in forms%}
 
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Municipio:</label>
-              {{form1.municipio}}
-            </div>
+              <div class="col m12 s12 l12">
+                <h5>Nueva Caja</h5>
+              {%for field in form%}
 
+                {%if field.label == "Tamanio" or field.label == "Peso neto"%}
+                  <div class="select input-field col s12 m6 l6">
+                    <label for="">{{field.label}}:</label>
+                    {{field}}
+                  </div>
+                {%elif field.label == "Kilogramos"%}
+                  <div class="col s12 m12 l12">
+                    <h5>Prueba</h5>
+                  </div>
+                  <div class="text input-field col s12 m6 l6">
+
+                    <label for="">{{field.label}}:</label>
+                    {{field}}
+                  </div>
+                {%else%}
+                  <div class="text input-field col s12 m6 l6">
+                    <label for="">{{field.label}}:</label>
+                    {{field}}
+                  </div>
+                {%endif%}
+
+              {%endfor%}
+                <div class="col s12 m12 l12">
+                  <div class="divider"></div>
+                  <div class="section">
+                    <h5>Peso Neto</h5>
+                    <h3 class="totPeso" id="pesoTotal">---</h3>
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+            <input type="hidden" name="numform" value="{{nforms}}">
+            <button class="btn waves-effect waves-light" type="submit">Guardar Recepción</button>
+            <button class="btn waves-effect waves-light" id="borrar" >Borrar Caja</button>
+            <button class="btn waves-effect waves-light" id="agregar">Agregar Caja</button>
           </form>
-          <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Productor:</label>
-              {{form.Productor}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Calidad Aproximada:</label>
-              {{form.calidad_aprox}}
-            </div>
-            <div class="select truncate input-field col s12 m6 l6">
-              <label for="">Firma:</label>
-              {{form.firma}}
-            </div>
-            <div class="select input-field col s12 m6 l6">
-              <label for="">Status:</label>
-              {{form.status}}
-            </div>
-            <div class="text input-field col s12 m12 l12">
-              <label for="">Representante:</label>
-              {{form.representante}}
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
-          </form>
 
-  			</div>
+        </div>
 
   		</div>
 
@@ -92,15 +139,207 @@
 
 
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('select').material_select();
-      });
-      $("#loc").change(function() {
-        $("#filtro").submit();
-      })
-      $("#mun").change(function() {
-        $("#filtro").submit();
-      })
+    $(document).ready(function() {
+      $('select').material_select();
+    });
+    $("#loc").change(function() {
+      $("#filtro").submit();
+    })
+
+    $("#mun").change(function() {
+      $("#filtro").submit();
+    })
+
+    $("#agregar").click(function(ev) {
+
+      $('#recepcion').append("<input type=\"hidden\" name=\"agregform\" value=\"{{nforms}}\">")
+      $('#recepcion').submit()
+    })
+    $("#borrar").click(function(ev) {
+      $('#recepcion').append("<input type=\"hidden\" name=\"borrarform\" value=\"{{nforms}}\">")
+      $('#recepcion').submit()
+    })
+
+          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+
+          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+
+          })
+
+          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+            console.log(ev);
+
+          })
+          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            console.log($prueba2,$prueba1,$prueba3);
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            console.log(prom, cantidad, total);
+
+            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+
+
+          })
+          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input").change(function(ev){
+
+            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input")[0].value;
+            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input")[0].value;
+            var $prueba2=ev.target.value;
+
+            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+
+            var total = Number(cantidad)*prom;
+
+            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+          })
     </script>
   </body>
 </html>
