@@ -49,16 +49,14 @@
 
         <div class="col m12 s12 l8 offset-l2">
 
-          {% if admin %}
+
           <a class="waves-effect waves-light btn btn-accion"><i class="material-icons">assignment</i>Corridas</a>
           <a class="waves-effect waves-light btn btn-accion pink darken-1"><i class="material-icons">assignment_turned_in</i>Precios</a>
           <a class="waves-effect waves-light btn btn-accion light-green darken-1"><i class="material-icons">list</i>Órdenes de compra</a>
-
-          {% else %}
           <a class="waves-effect waves-light btn btn-accion" href="{% url 'nuevaRecepcion' %}"><i class="material-icons">assignment</i>Realizar Recepcion</a>
           <a class="waves-effect waves-light btn btn-accion light-green darken-1" href="{% url 'listaRecepcion' %}"><i class="material-icons">list</i>Ver mis recepciones</a>
           <a class="waves-effect waves-light btn btn-accion pink darken-1" href="{% url 'nuevaCorrida' %}"><i class="material-icons">assignment_turned_in</i>Realizar Corrida</a>
-          {% endif %}
+
 
         </div>
 
