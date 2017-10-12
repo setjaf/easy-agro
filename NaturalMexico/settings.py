@@ -25,16 +25,16 @@ SECRET_KEY = 'kxbg0m71qq2-rb5n+q9itmp(18@d%(u+fegyt0s-=q=($t4)p-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
+# To allow every device in development
 ALLOWED_HOSTS = ['*']
-=======
-ALLOWED_HOSTS = [
-    '0.0.0.0',
-    '192.168.1.78',
-    '192.168.0.9',
-    '10.100.65.122'
-]
->>>>>>> 2739576008ad3f17351e59641083d6bc3fddd252
+
+# In production
+# ALLOWED_HOSTS = [
+#     '0.0.0.0',
+#     '192.168.1.78',
+#     '192.168.0.9',
+#     '10.100.65.122'
+# ]
 
 
 # Application definition
