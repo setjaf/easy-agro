@@ -1,0 +1,19 @@
+#!/bin/bash
+# @author: Set Jafet
+# @author: Dante Bazaldua
+# @date: October 12th, 2017
+# This script initialize the application and prepare all the databases for run.
+
+# Clean screen
+printf "\033c"
+
+echo "RunMe 1.0 - Script que inicia la aplicacion y verifica dependencias."
+
+echo "Preparando los modelos..."
+python manage.py makemigrations
+
+echo "Migrando los modelos..."
+python manage.py migrate
+
+echo "Iniciando aplicacion..."
+python manage.py runserver 0.0.0.0:8000
