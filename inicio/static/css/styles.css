@@ -137,6 +137,7 @@ Inicia estilos inicio.html*/
   display: flex;
   flex-direction: row;
   position: initial;
+  max-height: 28px;
 }
 .select>.select-wrapper>span{
   display: none;
@@ -155,6 +156,7 @@ Inicia estilos inicio.html*/
   display: flex;
   flex-direction: row;
   position: initial;
+  max-height: 28px;
 }
 
 .text label{
@@ -176,4 +178,14 @@ Inicia estilos inicio.html*/
 }
 .totPeso{
   color:#26a69a;
+}
+.caja_mostrar{
+  border-bottom: 1px solid gray;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.caja{
+  border-bottom: 1px solid gray;
 }

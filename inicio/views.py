@@ -167,7 +167,7 @@ def nuevaRecepcion(request):
         numform=1
         multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
         if request.method=='POST':
-            numform=request.POST["numform"]
+            numform=int(request.POST["numform"])
             multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
             if ("localidad" in request.POST) and ("municipio" in request.POST):
                 if request.POST['localidad']=='---------':

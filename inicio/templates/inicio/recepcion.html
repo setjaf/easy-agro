@@ -58,7 +58,7 @@
                 <label for="">Municipio:</label>
                 {{form1.municipio}}
               </div>
-
+              <input type="hidden" name="numform" value="{{nforms}}">
             </form>
           </div>
           <form method="post" id="recepcion" enctype="multipart/form-data">{% csrf_token %}
@@ -71,7 +71,7 @@
                 <h5>Información Recepcion</h5>
               </div>
               <div class="select input-field col s12 m6 l6">
-                <label for="">Calidad Aproximada:</label>
+                <label for="">Calidad Aprox:</label>
                 {{form.recepcion.calidad_aprox}}
               </div>
               <div class="select truncate input-field col s12 m6 l6">
@@ -88,14 +88,23 @@
               </div>
             </div>
             {%for form in forms%}
-
-              <div class="col m12 s12 l12">
+              <div class="col m12 s12 l12 caja_mostrar">
                 <h5>Nueva Caja</h5>
+                <i class="material-icons prefix" style="color:#26a69a;">keyboard_arrow_down</i>
+              </div>
+
+              <div class="col m12 s12 l12 caja">
+
               {%for field in form%}
 
-                {%if field.label == "Tamanio" or field.label == "Peso neto"%}
+                {%if field.label == "Peso neto"%}
                   <div class="select input-field col s12 m6 l6">
                     <label for="">{{field.label}}:</label>
+                    {{field}}
+                  </div>
+                {%elif field.label == "Tamanio"%}
+                  <div class="select input-field col s12 m6 l6">
+                    <label for="">Tamaño:</label>
                     {{field}}
                   </div>
                 {%elif field.label == "Kilogramos"%}
@@ -108,7 +117,7 @@
                     {{field}}
                   </div>
                 {%else%}
-                  <div class="text input-field col s12 m6 l6">
+                  <div class="text input-field col s6 m6 l6">
                     <label for="">{{field.label}}:</label>
                     {{field}}
                   </div>
@@ -141,7 +150,13 @@
     <script type="text/javascript">
     $(document).ready(function() {
       $('select').material_select();
+      $('.caja').slideToggle( "slow" );
     });
+    $(".caja_mostrar").click(function(ev) {
+      $('.caja').slideToggle( "slow" );
+    //  console.log($('div.caja'))
+    })
+
     $("#loc").change(function() {
       $("#filtro").submit();
     })
