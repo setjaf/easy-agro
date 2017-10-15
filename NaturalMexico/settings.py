@@ -89,15 +89,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',
         'NAME': 'natmex',
-<<<<<<< HEAD
         'USER': 'prueba',
         'PASSWORD': 'prueba10',
-        'OPTIONS': {
-=======
-        'USER':'prueba',
-        'PASSWORD':'prueba10',
         'OPTIONS':{
->>>>>>> 7613e2c209639b9d478291015f9382312daf54aa
             'init_command': 'SET default_storage_engine=INNODB',
         },
     }
