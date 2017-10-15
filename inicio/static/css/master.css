@@ -1,0 +1,13 @@
+/*
+ * Boilerplate for styles.
+ * EasyAgro Team
+ * Oct-2017
+ */
+*, body{
+  padding: 0;
+  margin:0 auto;
+}
+/* Some util styles */
+.nm-submit{
+  background-color: #25ad64 !important;
+}

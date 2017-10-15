@@ -1,0 +1,90 @@
+.container{
+  width: 90%;
+}
+.container .row{
+  width: 100%;
+}
+#session{
+  background-color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+}
+#session .nm-appname{
+  color: #23B987;
+  font-weight: 300;
+  font-size: 48px;
+  line-height: 65px;
+  padding: 0;
+  margin: 0px;
+}
+#session .nm-subtitle{
+  font-size: 28px;
+  font-weight: 300;
+  color: #222222;
+  margin: 0;
+  padding: 0;
+}
+#nm-login-form h5{
+  background-color: rgb(249, 78, 78);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 15px;
+  padding: 4px;
+  letter-spacing: 0.1em;
+}
+#nm-login-form form{
+  margin: 20px 0 50px 0;
+}
+#nm-login-form form input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea {
+  background-color: transparent !important;
+  border:none !important;
+}
+
+#nm-login-form form input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea{
+  border-bottom:none !important;
+  box-shadow:none !important;
+}
+
+#nm-login-form form .input-field:active{
+  color: #206e44;
+}
+#nm-login-form form .input-field{
+  background-color: #f6f6f6;
+  width: 100%;
+  height: 40px;
+  margin: 10px 0px 10px 0px;
+  padding: 2px;
+  border-radius:5px;
+  display: flex;
+  align-items: center;
+  -webkit-transition: background-color 500ms ease-out 1s;
+  -moz-transition: background-color 500ms ease-out 1s;
+  -o-transition: background-color 500ms ease-out 1s;
+  transition: background-color 500ms ease-out 1s;
+}
+#nm-login-form form .input-field input{
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+#nm-login-form form .input-field input::placeholder{
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+}
+#nm-login-form form .input-field input[type=text]:first-letter{
+  text-transform: lowercase;
+}
+#nm-login-form form .input-field i{
+  color: #222;
+}
+#nm-login-form form .input-field .prefix{
+  font-size: 30px;
+}
+#nm-login-form button{
+  margin: 20px 0px 0px 0px;
+}
