@@ -45,7 +45,7 @@
         <div class="col l10 m12 s12 offset-l1 left-align">
           <h1 class="titRec">Recepción<span>/limón</span></h1>
         </div>
-        <div class="col m12 s12 l8 offset-l2">          
+        <div class="col m12 s12 l8 offset-l2">
           <div class="col s12 m12 l12">
             <h5 class="red-text text-darken-2">{{mensaje}}</h5>
           </div>
@@ -130,8 +130,15 @@
                 <div class="col s12 m12 l12">
                   <div class="divider"></div>
                   <div class="section">
-                    <h5>Peso Neto</h5>
+                    <h5>Peso Total Aproximado:</h5>
                     <h3 class="totPeso" id="pesoTotal">---</h3>
+                  </div>
+                </div>
+                <div class="col s12 m12 l12">
+                  <div class="divider"></div>
+                  <div class="section">
+                    <h5>Peso Promedio:</h5>
+                    <h3 class="totPeso" id="pesoProm">---</h3>
                   </div>
                 </div>
               </div>
@@ -174,6 +181,7 @@
         console.log(prom, cantidad, total);
 
         $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+        $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       }
       if ($caja2) {
 
@@ -188,6 +196,7 @@
         var total = Number(cantidad)*prom;
 
         $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+        $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       }
       if ($caja3) {
 
@@ -202,6 +211,7 @@
         var total = Number(cantidad)*prom;
 
         $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+        $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       }
     });
     $("div.caja_mostrar:eq(0)").click(function(ev) {
@@ -259,7 +269,7 @@
       console.log(prom, cantidad, total);
 
       $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -280,7 +290,7 @@
       console.log(prom, cantidad, total);
 
       $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -301,7 +311,7 @@
       console.log(prom, cantidad, total);
 
       $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -344,7 +354,7 @@
       console.log(prom, cantidad, total);
 
       $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -365,7 +375,7 @@
       console.log(prom, cantidad, total);
 
       $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -382,7 +392,7 @@
       var total = Number(cantidad)*prom;
 
       $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
 
     })
     $caja2.children("div:nth-child(3)").children("input").change(function(ev){
@@ -419,7 +429,7 @@
       console.log(prom, cantidad, total);
 
       $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
       console.log(ev);
 
     })
@@ -440,7 +450,7 @@
       console.log(prom, cantidad, total);
 
       $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
 
 
     })
@@ -457,7 +467,7 @@
       var total = Number(cantidad)*prom;
 
       $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
+      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
     })
     $caja3.children("div:nth-child(3)").children("input").change(function(ev){
 

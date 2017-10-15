@@ -318,8 +318,10 @@ def modRecepcion(request,prodc_id):
     return redirect('/')
 
 def prueba(request):
-    '''u = Usuario.objects.create_user('prueba', 'prueba@prueba.com', 'pruebapass')
+    u = Usuario.objects.create_user('Dante', 'nte111da@gmail.com', 'prueba')
     u.save();
+    return redirect('/')
+'''
     base = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(base, 'static/datos/calibres.json'),"r+") as json_data:
         d = json.load(json_data)
@@ -332,7 +334,7 @@ def prueba(request):
     with open(os.path.join(base, 'static/datos/calibres.json'),"w+") as json_data:
         d=json.dumps(d)
         json_data.write(d)
-        json_data.close()'''
+        json_data.close()
 
     if request.user.is_authenticated:
         #----------------------------------------------------------
@@ -353,12 +355,6 @@ def prueba(request):
                 logout(request)
                 #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return redirect('/')
-
-            #Inicia proceso de registro de recepción
-
-
-
-
         #----------------------------------------------------------
         numform=1
         multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
@@ -433,15 +429,16 @@ def prueba(request):
                         p=forms.save(commit=False)
                         print p
 
-                    '''if form.is_valid():
+                    if form.is_valid():
                         m=form.save(commit=False)
-                        print m'''
+                        print m
 
             context={'forms':formset,'form':form,'form1':form2,'nforms':numform}
             return HttpResponse(render(request, 'inicio/prueba.html', context))
-        '''for form in multiformset():
-            print(form)'''
+        for form in multiformset():
+            print(form)
         context={'forms':multiformset,'form':form,'form1':form2,'nforms':numform}
-        return HttpResponse(render(request, 'inicio/prueba.html', context))
-    return redirect('/')
-# Create your views here.
+        return HttpResponse(render(request, 'inicio/prueba.html', context))'''
+
+
+# Create your views here
