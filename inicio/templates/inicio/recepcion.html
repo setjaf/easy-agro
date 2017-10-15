@@ -45,7 +45,10 @@
         <div class="col l10 m12 s12 offset-l1 left-align">
           <h1 class="titRec">Recepción<span>/limón</span></h1>
         </div>
-        <div class="col m12 s12 l8 offset-l2">
+        <div class="col m12 s12 l8 offset-l2">          
+          <div class="col s12 m12 l12">
+            <h5 class="red-text text-darken-2">{{mensaje}}</h5>
+          </div>
           <div class="col l12 m12 s12">
             <form class="" id="filtro" method="post">{% csrf_token %}
               <h5>Encontrar Productor</h5>
@@ -148,12 +151,71 @@
 
 
     <script type="text/javascript">
+
     $(document).ready(function() {
       $('select').material_select();
       $('.caja').slideToggle( "slow" );
+      $caja1=$("#recepcion").children("div.caja:eq(0)");
+      $caja2=$("#recepcion").children("div.caja:eq(1)");
+      $caja3=$("#recepcion").children("div.caja:eq(2)");
+      if ($caja1) {
+        var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
+        var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
+        var $prueba2=$caja1.children("div:nth-child(11)").children("input")[0].value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      }
+      if ($caja2) {
+
+        var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
+        var $prueba3=$caja2.children("div:nth-child(13)").children("input")[0].value;
+        var $prueba2=$caja2.children("div:nth-child(11)").children("input")[0].value;
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      }
+      if ($caja3) {
+
+        var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
+        var $prueba3=$caja3.children("div:nth-child(13)").children("input")[0].value;
+        var $prueba2=$caja3.children("div:nth-child(11)").children("input")[0].value;
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      }
     });
-    $(".caja_mostrar").click(function(ev) {
-      $('.caja').slideToggle( "slow" );
+    $("div.caja_mostrar:eq(0)").click(function(ev) {
+      $('div.caja:eq(0)').slideToggle( "slow" );
+    //  console.log($('div.caja'))
+    })
+
+    $("div.caja_mostrar:eq(1)").click(function(ev) {
+      $('div.caja:eq(1)').slideToggle( "slow" );
+    //  console.log($('div.caja'))
+    })
+
+    $("div.caja_mostrar:eq(2)").click(function(ev) {
+      $('div.caja:eq(2)').slideToggle( "slow" );
     //  console.log($('div.caja'))
     })
 
@@ -170,191 +232,249 @@
       $('#recepcion').append("<input type=\"hidden\" name=\"agregform\" value=\"{{nforms}}\">")
       $('#recepcion').submit()
     })
+
     $("#borrar").click(function(ev) {
       $('#recepcion').append("<input type=\"hidden\" name=\"borrarform\" value=\"{{nforms}}\">")
       $('#recepcion').submit()
     })
 
-          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input").change(function(ev){
+    $caja1=$("#recepcion").children("div.caja:eq(0)");
+    $caja2=$("#recepcion").children("div.caja:eq(1)");
+    $caja3=$("#recepcion").children("div.caja:eq(2)");
 
-            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+    $caja1.children("div:nth-child(11)").children("input").change(function(ev){
 
-            console.log($prueba2,$prueba1,$prueba3);
+      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var total = Number(cantidad)*prom;
+      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
 
-            console.log(prom, cantidad, total);
+      var total = Number(cantidad)*prom;
 
-            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      console.log(prom, cantidad, total);
 
-            console.log(ev);
+      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-          })
-          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input").change(function(ev){
+      console.log(ev);
 
-            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+    })
+    $caja1.children("div:nth-child(9)").children("input").change(function(ev){
 
-            console.log($prueba2,$prueba1,$prueba3);
+      var $prueba1=$caja1.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var total = Number(cantidad)*prom;
+      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
 
-            console.log(prom, cantidad, total);
+      var total = Number(cantidad)*prom;
 
-            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      console.log(prom, cantidad, total);
 
-            console.log(ev);
+      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-          })
-          $("#recepcion").children("div:nth-child(2)").children("div:nth-child(14)").children("input").change(function(ev){
+      console.log(ev);
 
-            var $prueba1=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(2)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+    })
+    $caja1.children("div:nth-child(13)").children("input").change(function(ev){
 
-            console.log($prueba2,$prueba1,$prueba3);
+      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja1.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var cantidad =$("#recepcion").children("div:nth-child(2)").children("div:nth-child(4)").children("input")[0].value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var total = Number(cantidad)*prom;
+      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
 
-            console.log(prom, cantidad, total);
+      var total = Number(cantidad)*prom;
 
-            $("#recepcion").children("div:nth-child(2)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      console.log(prom, cantidad, total);
 
-            console.log(ev);
+      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-          })
+      console.log(ev);
 
-          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input").change(function(ev){
+    })
+    $caja1.children("div:nth-child(3)").children("input").change(function(ev){
 
-            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja1.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=$caja1.children("div:nth-child(13)").children("input")[0].value;
 
-            console.log($prueba2,$prueba1,$prueba3);
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+      var cantidad =ev.target.value;
 
-            var total = Number(cantidad)*prom;
+      var total = Number(cantidad)*prom;
 
-            console.log(prom, cantidad, total);
+      console.log(prom, cantidad, total);
 
-            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-            console.log(ev);
+      console.log(ev);
 
-          })
-          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input").change(function(ev){
+    })
 
-            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+    $caja2.children("div:nth-child(9)").children("input").change(function(ev){
 
-            console.log($prueba2,$prueba1,$prueba3);
+      var $prueba1=$caja2.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var total = Number(cantidad)*prom;
+      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
 
-            console.log(prom, cantidad, total);
+      var total = Number(cantidad)*prom;
 
-            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      console.log(prom, cantidad, total);
 
-            console.log(ev);
+      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-          })
-          $("#recepcion").children("div:nth-child(3)").children("div:nth-child(14)").children("input").change(function(ev){
+      console.log(ev);
 
-            var $prueba1=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(3)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+    })
+    $caja2.children("div:nth-child(11)").children("input").change(function(ev){
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      var $prueba1=$caja2.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba3=$caja2.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var cantidad =$("#recepcion").children("div:nth-child(3)").children("div:nth-child(4)").children("input")[0].value;
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var total = Number(cantidad)*prom;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            $("#recepcion").children("div:nth-child(3)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
 
+      var total = Number(cantidad)*prom;
 
-          })
+      console.log(prom, cantidad, total);
 
-          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input").change(function(ev){
+      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+      console.log(ev);
 
-            console.log($prueba2,$prueba1,$prueba3);
+    })
+    $caja2.children("div:nth-child(13)").children("input").change(function(ev){
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var total = Number(cantidad)*prom;
+      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
 
-            console.log(prom, cantidad, total);
+      var total = Number(cantidad)*prom;
 
-            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-            console.log(ev);
 
-          })
-          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input").change(function(ev){
+    })
+    $caja2.children("div:nth-child(3)").children("input").change(function(ev){
 
-            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+      var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=$caja2.children("div:nth-child(13)").children("input")[0].value;
 
-            console.log($prueba2,$prueba1,$prueba3);
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      var cantidad = ev.target.value;
 
-            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+      var total = Number(cantidad)*prom;
 
-            var total = Number(cantidad)*prom;
+      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-            console.log(prom, cantidad, total);
 
-            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+    })
 
+    $caja3.children("div:nth-child(9)").children("input").change(function(ev){
 
+      var $prueba1=$caja3.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=ev.target.value;
 
-          })
-          $("#recepcion").children("div:nth-child(4)").children("div:nth-child(14)").children("input").change(function(ev){
+      console.log($prueba2,$prueba1,$prueba3);
 
-            var $prueba1=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(10)").children("input")[0].value;
-            var $prueba3=$("#recepcion").children("div:nth-child(4)").children("div:nth-child(12)").children("input")[0].value;
-            var $prueba2=ev.target.value;
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-            var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
 
-            var cantidad =$("#recepcion").children("div:nth-child(4)").children("div:nth-child(4)").children("input")[0].value;
+      var total = Number(cantidad)*prom;
 
-            var total = Number(cantidad)*prom;
+      console.log(prom, cantidad, total);
 
-            $("#recepcion").children("div:nth-child(4)").children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
 
-          })
+      console.log(ev);
+
+    })
+    $caja3.children("div:nth-child(11)").children("input").change(function(ev){
+
+      var $prueba1=$caja3.children("div:nth-child(13)").children("input")[0].value;
+      var $prueba3=$caja3.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba2=ev.target.value;
+
+      console.log($prueba2,$prueba1,$prueba3);
+
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
+
+      var total = Number(cantidad)*prom;
+
+      console.log(prom, cantidad, total);
+
+      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+
+
+    })
+    $caja3.children("div:nth-child(13)").children("input").change(function(ev){
+
+      var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=ev.target.value;
+
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
+
+      var total = Number(cantidad)*prom;
+
+      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+    })
+    $caja3.children("div:nth-child(3)").children("input").change(function(ev){
+
+      var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
+      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
+      var $prueba2=$caja3.children("div:nth-child(13)").children("input")[0].value;
+
+      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+      var cantidad=ev.target.value;
+
+      var total = Number(cantidad)*prom;
+
+      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
+
+    })
+
     </script>
   </body>
 </html>

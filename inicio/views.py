@@ -149,27 +149,21 @@ def nuevaRecepcion(request):
         choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
         choices.insert(0, ("---------","---------"))
         form2.fields["municipio"].choices = choices
-        #Se verifica si el metodo de envio fue post
-        if request.method == "POST":
-            #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
+        #Inicia proceso de registro de recepción
+        #----------------------------------------------------------
+        numform=1
+        multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
+        if request.method=='POST':
             if "salir" in request.POST:
                 #Si nos estan mandando la informacion correcta realizamos el proceso del logout
                 logout(request)
                 #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return redirect('/')
-
-            #Inicia proceso de registro de recepción
-
-
-
-
-        #----------------------------------------------------------
-        numform=1
-        multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
-        if request.method=='POST':
             numform=int(request.POST["numform"])
             multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
+
             if ("localidad" in request.POST) and ("municipio" in request.POST):
+
                 if request.POST['localidad']=='---------':
                     form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(municipio=request.POST['municipio'])
                 elif request.POST['municipio']=='---------':
@@ -223,6 +217,12 @@ def nuevaRecepcion(request):
                 data.update(request.POST.dict())
                 formset = multiformset(data)
                 form = NuevaRecepcion(request.POST, request.FILES)
+
+                for forms in formset:
+                    if not forms.is_valid():
+                        context={'forms':formset,'form':form,'form1':form2,'nforms':numform,'mensaje':'Llena toda la información de las cajas para poder continuar'}
+                        return HttpResponse(render(request, 'inicio/recepcion.html', context))
+
                 if form.is_valid():
                     recepcion = form['recepcion'].save(commit=False)
                     recepcion.Empleado = Empleado.objects.get(usuario=request.user)
@@ -236,13 +236,30 @@ def nuevaRecepcion(request):
 
                 for forms in formset:
                     if forms.is_valid():
-                        p=forms.save(commit=False)
-                        print p
+                        c=forms['caja'].save(commit=False)
+                        c.ProductoCampo = recepcion
+                        c.save()
+                        p1=forms['prueba1'].save(commit=False)
+                        p1.Caja=c
+                        p1.save()
+                        p2=forms['prueba2'].save(commit=False)
+                        p2.Caja=c
+                        p2.save()
+                        p3=forms['prueba3'].save(commit=False)
+                        p3.Caja=c
+                        p3.save()
+                        print c
+                        print p1
+                        print p2
+                        print p3
 
-                    '''if form.is_valid():
-                        m=form.save(commit=False)
-                        print m'''
-
+                context={'forms':formset,'form':form,'form1':form2,'nforms':numform,'mensaje':'Registro exitoso'}
+                return HttpResponse(render(request, 'inicio/recepcion.html', context))
+                '''if form.is_valid():
+                    m=form.save(commit=False)
+                    print m'''
+            print dir(formset)
+            print formset.validate_max
             context={'forms':formset,'form':form,'form1':form2,'nforms':numform}
             return HttpResponse(render(request, 'inicio/recepcion.html', context))
         '''for form in multiformset():

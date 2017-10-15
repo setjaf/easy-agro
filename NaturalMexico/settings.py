@@ -27,15 +27,15 @@ SECRET_KEY = 'kxbg0m71qq2-rb5n+q9itmp(18@d%(u+fegyt0s-=q=($t4)p-'
 DEBUG = True
 
 # To allow every device in development
-ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['*']
 
 # In production
-# ALLOWED_HOSTS = [
-#     '0.0.0.0',
-#     '192.168.1.78',
-#     '192.168.0.9',
-#     '10.100.65.122'
-# ]
+ALLOWED_HOSTS = [
+     '0.0.0.0',
+     '192.168.1.78',
+     '192.168.0.9',
+     '10.100.65.122'
+ ]
 
 
 # Application definition
@@ -89,8 +89,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST':'127.0.0.1',
         'NAME': 'natmex',
-        'USER':'root',
-        'PASSWORD':'pass',
+        'USER':'rprueba',
+        'PASSWORD':'prueba10',
         'OPTIONS':{
             'init_command': 'SET default_storage_engine=INNODB',
         },
