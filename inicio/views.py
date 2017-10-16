@@ -13,7 +13,7 @@ from django.forms import formset_factory
 from django.conf import settings
 
 from .form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, NuevaCorrida, Multiforms, NuevoEmpleado
-from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba, Usuario
+from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba, Usuario, Status_pc
 import json
 def index(request):
     #Se inicializa la variable mensaje con None para  no mostrar mensaje el la primera petición
@@ -318,9 +318,12 @@ def modRecepcion(request,prodc_id):
     return redirect('/')
 
 def prueba(request):
-    u = Usuario.objects.create_user('Dante', 'nte111da@gmail.com', 'prueba')
-    u.save();
-    return redirect('/')
+    recepciones=ProductoCampo.objects.all()
+    for recepcion in recepciones:
+        status=Status_pc.objects.filter(IDProductoCampo=recepcion).exclude(estado=['c','a']).order_by('fecha').first()
+        print status.estado
+        print status.fecha
+    return HttpResponse(render(request, 'inicio/prueba.html'))
 '''
     base = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(base, 'static/datos/calibres.json'),"r+") as json_data:
