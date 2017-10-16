@@ -4,53 +4,61 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Recepción</title>
+	<title>Inicio de Sesión</title>
 	<!--Import Google Icon Font-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+	<link rel="icon" href="{% static "images/d_ea.ico"%}">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
-	<link rel="stylesheet" href="{% static "css/styles.css"%}">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+	<link rel="stylesheet" href="{% static "css/master.css"%}">
+	<link rel="stylesheet" href="{% static "css/session.css"%}">
+
+	<!-- Scripts -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
 </head>
 <body>
-	<section class="container centro">
+	<section class="container" id="session">
 
+		<div class="row center col s12">
 
-		<div class="row center">
-			<div class="titulo">
-				<h1 class="appName">EASY</h1>
-				<h1 class="appName">AGRO.</h1>
-			</div>
+			<h1 class="nm-appname">EasyAgro</h1>
 
-			<h3 class="inicioSes">Inicio de sesión</h3>
+			<h3 class="nm-subtitle">Inicio de sesión</h3>
 
-			<div class="col l8 m8 s8 offset-l2 offset-m2 offset-s2">
-				<h5>{{message}}</h5>
+			<div class="col l8 m8 s8 offset-l2 offset-m2 offset-s2" id="nm-login-form">
 				<form class="" action="" method="post">{% csrf_token %}
 
-						<div class="input-field col s12 m12 l12">
-		          <i class="material-icons prefix" style="color:#8f8f8f;">account_box</i>
+						<div class="input-field col s12 m12 l12" id="nm-user">
+		          <i class="material-icons prefix">account_box</i>
 		          {{form.username}}
 		        </div>
-						<div class="input-field col s12 m12 l12">
-		          <i class="material-icons prefix" style="color:#8f8f8f;">lock</i>
+						<div class="input-field col s12 m12 l12" id="nm-pass">
+		          <i class="material-icons prefix">lock</i>
 		          {{form.password}}
 		        </div>
-						<button class="btn waves-effect waves-light" type="submit" method="post">Entrar</button>
+						<button class="btn z-depth-0 nm-submit" type="submit" method="post">Entrar</button>
 
 				</form>
 
 			</div>
 
-			<div class="reCont col s12">
+			<!-- Aún no se liberará esta característica  -->
+			<!-- <div class="reCont col s12">
 				<a class="waves-effect waves-light btn brown darken-1" href="{% url 'index' %}">Recuperar contraseña</a>
-			</div>
+			</div> -->
 		</div>
 
 	</section>
 
-
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
+	<script type="text/javascript">
+		$( document ).ready( function(){
+			$('.tooltipped').tooltip({delay: 150});
+			Materialize.toast( '{{message}}', 3000, 'rounded');
+			$( '#nm-user input' ).attr('placeholder','Usuario, ejemplo: Juan_23');
+			$( '#nm-pass input' ).attr('placeholder','Ingresa contraseña.');
+		});
+	</script>
 </body>
 </html>
