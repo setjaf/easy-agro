@@ -35,12 +35,23 @@ def index(request):
                 # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return HttpResponse(render(request, 'inicio/login.html', context))
         # Si el metodo no es POST, nos indica que debemos renderizar la página inicial de un usario autentificado, obtenemos la informacion del objeto Personal
-        p = Empleado.objects.get(usuario=request.user.id)
-        # Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
-        #e = Empleado.objects.get(usuario=request.user)
-        #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
-        context = {'nombre': p.nombre, 'admin': request.user.is_admin,
-                   'personal': request.user.is_personal, 'pc': 'pc'}
+        empleado = Empleado.objects.get(usuario=request.user.id)
+        recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
+        recepcionesLista=[]
+        for recepcion in recepciones:
+            status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+
+            if not status.estado=='c' and not status.estado=='a':
+                diccionarioRecepcion={
+                    'fecha':recepcion.fecha_recepcion.strftime('%d/%m/%Y'),
+                    'productor':recepcion.Productor,
+                    'idproducto':recepcion.IDProductoCampo
+                }
+                diccionarioEstado={'status':status.estado}
+                diccionarioRecepcion.update(diccionarioEstado)
+                recepcionesLista.append(diccionarioRecepcion)
+        context = {'nombre': empleado.nombre, 'admin': request.user.is_admin,
+                   'personal': request.user.is_personal, 'recepciones': recepcionesLista}
         # Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
         if request.user.is_admin:
             return HttpResponse(render(request, 'inicio/inicioAdmin.html', context))
@@ -55,12 +66,23 @@ def index(request):
             if user is not None:
                 login(request, user)
                 message = 'Te has autentificado correctamente'
-                p = Empleado.objects.get(usuario=request.user.id)
+                empleado = Empleado.objects.get(usuario=request.user.id)
                 # Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
-                #e = Empleado.objects.get(usuario=request.user)
-                #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
-                context = {'nombre': p.nombre, 'admin': request.user.is_admin,
-                           'personal': request.user.is_personal, 'pc': 'pc'}
+                recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
+                recepcionesLista=[]
+                for recepcion in recepciones:
+                    status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+                    if not status.estado=='c' and not status.estado=='a':
+                        diccionarioRecepcion={
+                            'fecha':recepcion.fecha_recepcion.strftime('%d/%m/%Y'),
+                            'productor':recepcion.Productor,
+                            'idproducto':recepcion.IDProductoCampo
+                        }
+                        diccionarioEstado={'status':status.estado}
+                        diccionarioRecepcion.update(diccionarioEstado)
+                        recepcionesLista.append(diccionarioRecepcion)
+                context = {'nombre': empleado.nombre, 'admin': request.user.is_admin,
+                           'personal': request.user.is_personal, 'recepciones': recepcionesLista}
                 # Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
                 if request.user.is_admin:
                     return HttpResponse(render(request, 'inicio/inicioAdmin.html', context))
@@ -242,11 +264,17 @@ def nuevaRecepcion(request):
                 form = NuevaRecepcion(request.POST, request.FILES)
 
                 for forms in formset:
-                    if not forms.is_valid():
-                        context = {'forms': formset, 'form': form, 'form1': form2, 'nforms': numform,
+                    if not forms.is_valid() or not forms['caja'].is_valid():
+                        context = {'forms': formset, 'form': form,
+                                   'form1': form2, 'nforms': numform,
                                    'mensaje': 'Llena toda la información de las cajas para poder continuar'}
                         return HttpResponse(render(request, 'inicio/recepcion.html', context))
-
+                    for formp in forms:
+                        if formp.data=='' or formp.data=='0' or formp.data==0:
+                            context = {'forms': formset, 'form': form,
+                                       'form1': form2, 'nforms': numform,
+                                       'mensaje': 'Recuerda que no se pueden registrar las cajas si dejas campos vacios o con datos en 0'}
+                            return HttpResponse(render(request, 'inicio/recepcion.html', context))
                 if form.is_valid():
                     recepcion = form['recepcion'].save(commit=False)
                     recepcion.Empleado = Empleado.objects.get(
@@ -300,17 +328,21 @@ def nuevaRecepcion(request):
 
 def listaRecepcion(request):
     if request.user.is_authenticated:
-        if request.method == "POST":
-            # Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
-            if "salir" in request.POST:
-                # Si nos estan mandando la informacion correcta realizamos el proceso del logout
-                logout(request)
-                # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
-                return redirect('/')
-        e = Empleado.objects.get(usuario=request.user)
-        pc = ProductoCampo.objects.filter(Empleado=e)
-        context = {'pc': pc}
-        return HttpResponse(render(request, 'inicio/recepcionLista.html', context))
+        empleado=Empleado.objects.get(usuario=request.user)
+        recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
+        recepcionesLista=[]
+        for recepcion in recepciones:
+            status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+            diccionarioRecepcion={
+                'fecha':recepcion.fecha_recepcion.strftime('%d/%m/%Y'),
+                'productor':recepcion.Productor,
+                'idproducto':recepcion.IDProductoCampo
+            }
+            diccionarioEstado={'status':status.estado}
+            diccionarioRecepcion.update(diccionarioEstado)
+            recepcionesLista.append(diccionarioRecepcion)
+        context={'recepciones':recepcionesLista, 'admin': request.user.is_admin}
+        return HttpResponse(render(request, 'inicio/recepcionLista.html',context))
     return redirect('/')
 
 
@@ -325,22 +357,38 @@ def modRecepcion(request, prodc_id):
                 logout(request)
                 # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return redirect('/')
-
+            if "borrar" in request.POST:
+                p=ProductoCampo.objects.get(pk=prodc_id)
+                p.delete()
+                return redirect('/recepcion')
             # Inicia proceso de registro de recepción
             form = NuevaRecepcion(request.POST, request.FILES)
             if form.is_valid():
                 p = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
-                p.calidad_aprox = request.POST['calidad_aprox']
-                p.status = request.POST['status']
-                p.representante = request.POST['representante']
-                p.Empleado = Empleado.objects.get(usuario=request.user.id)
-
+                p.calidad_aprox = request.POST['recepcion-calidad_aprox']
+                p.representante = request.POST['recepcion-representante']
                 if "firma" in request.FILES:
                     p.firma = request.FILES['firma']
                 p.save()
-                return redirect('/recepcion')
+                status=Status_pc.objects.filter(IDProductoCampo=p).order_by('fecha').last()
+                if not status.estado==request.POST['status-estado']:
+                    status=Status_pc(IDProductoCampo=p, estado=request.POST['status-estado'])
+                    status.save()
+                pc = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
+                status = Status_pc.objects.filter(IDProductoCampo=pc).order_by('fecha').last()
+                form = NuevaRecepcion(instance={
+                    'recepcion':pc,
+                    'status': status
+                })
+                context = {'form': form}
+                return HttpResponse(render(request, 'inicio/recepcionMod.html', context))
+                #return redirect('/recepcion')
         pc = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
-        form = NuevaRecepcion(model_to_dict(pc))
+        status = Status_pc.objects.filter(IDProductoCampo=pc).order_by('fecha').last()
+        form = NuevaRecepcion(instance={
+            'recepcion':pc,
+            'status': status
+        })
         context = {'form': form}
         return HttpResponse(render(request, 'inicio/recepcionMod.html', context))
 
@@ -348,20 +396,23 @@ def modRecepcion(request, prodc_id):
 
 
 def prueba(request):
-<<<<<<< HEAD
-    recepciones=ProductoCampo.objects.all()
+    empleado=Empleado.objects.get(usuario=request.user)
+    recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
+    recepcionesLista=[]
     for recepcion in recepciones:
-        status=Status_pc.objects.filter(IDProductoCampo=recepcion).exclude(estado=['c','a']).order_by('fecha').first()
-        print status.estado
-        print status.fecha
-    return HttpResponse(render(request, 'inicio/prueba.html'))
-=======
-    u = Usuario.objects.create_user('Dante', 'nte111da@gmail.com', 'prueba')
-    u.save()
-    return redirect('/')
+        status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+        if not status.estado=='c' and not status.estado=='a':
+            diccionarioRecepcion={
+                'fecha':recepcion.fecha_recepcion.strftime('%d/%m/%Y'),
+                'productor':recepcion.Productor,
+                'idproducto':recepcion.IDProductoCampo
+            }
+            diccionarioEstado={'status':status.estado}
+            diccionarioRecepcion.update(diccionarioEstado)
+            recepcionesLista.append(diccionarioRecepcion)
+    context={'recepciones':recepcionesLista}
+    return HttpResponse(render(request, 'inicio/prueba.html',context))
 
-
->>>>>>> 4ec84e32fb5c32fe1c63ae68afccc9bf8cba37fa
 '''
     base = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(base, 'static/datos/calibres.json'),"r+") as json_data:

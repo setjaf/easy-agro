@@ -33,7 +33,11 @@ class NuevaCaja(ModelForm):
     class Meta:
         model = Caja
         fields = ['peso_neto','color','cantidad','tamanio','alto','ancho','largo']
+    def __init__(self, *args, **kwargs):
+        super(NuevaCaja, self).__init__(*args, **kwargs)
 
+        for key in self.fields:
+            self.fields[key].required = True
 class NuevaPrueba(ModelForm):
     class Meta:
         model = Prueba

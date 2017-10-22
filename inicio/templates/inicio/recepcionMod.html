@@ -49,25 +49,29 @@
           <form class="" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="select input-field col s12 m6 l6">
               <label for="">Productor:</label>
-              {{form.Productor}}
+              {{form.recepcion.Productor}}
             </div>
             <div class="select input-field col s12 m6 l6">
               <label for="">Calidad Aproximada:</label>
-              {{form.calidad_aprox}}
+              {{form.recepcion.calidad_aprox}}
             </div>
             <div class="select truncate input-field col s12 m6 l6">
               <label for="">Firma:</label>
-              {{form.firma}}
+              {{form.recepcion.firma}}
             </div>
             <div class="select input-field col s12 m6 l6">
               <label for="">Status:</label>
-              {{form.status}}
+              {{form.status.estado}}
             </div>
             <div class="text input-field col s12 m12 l12">
               <label for="">Representante:</label>
-              {{form.representante}}
+              {{form.recepcion.representante}}
             </div>
             <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
+          </form>
+          <form method="post">{%csrf_token%}
+              <input type="hidden" name="borrar" value="">
+              <button class="btn waves-effect waves-light red darken-2" type="submit" method="post" value="Enviar">Borrar Recepción</button>
           </form>
 
   			</div>
