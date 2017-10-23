@@ -63,31 +63,31 @@
           <form class="" action="" id="corrida" method="post" enctype="multipart/form-data">{% csrf_token %}
             <div class="select input-field col s12 m6 l6">
               <label for="">Recepcion:</label>
-              {{form.ProductoCampo}}
+              {{form.corrida.ProductoCampo}}
             </div>
             <div class="text input-field col s12 m6 l6">
               <label for="">Calibre:</label>
-              {{form.calibre}}
+              {{form.corrida.calibre}}
             </div>
             <div class="text input-field col s12 m6 l6">
               <label for="">Kilogramos:</label>
-              {{form.kilogramos}}
+              {{form.corrida.kilogramos}}
             </div>
             <div class="select input-field col s12 m6 l6">
               <label for="">Producto:</label>
-              {{form.Producto}}
+              {{form.corrida.Producto}}
             </div>
             <div class="text input-field col s12 m12 l12">
               <label for="">Fecha Compra:</label>
-              {{form.fecha_compra}}
+              {{form.corrida.fecha_compra}}
             </div>
             <div class="text input-field col s12 m12 l12">
               <label for="">Folio:</label>
-              {{form.folio}}
+              {{form.corrida.folio}}
             </div>
             <div class="select input-field col s12 m6 l6">
               <label for="">Status:</label>
-              {{form.status}}
+              {{form.status.estado}}
             </div>
 
             <button class="btn waves-effect waves-light" type="submit" method="post" value="Enviar">Guardar y continuar</button>
