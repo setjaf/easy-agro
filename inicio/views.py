@@ -16,6 +16,7 @@ from .form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, Nueva
 from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba, Usuario
 import json
 
+__VERSION = 1.0
 
 def index(request):
     # Se inicializa la variable mensaje con None para  no mostrar mensaje el la primera petición
@@ -40,7 +41,7 @@ def index(request):
         #e = Empleado.objects.get(usuario=request.user)
         #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
         context = {'nombre': p.nombre, 'admin': request.user.is_admin,
-                   'personal': request.user.is_personal, 'pc': 'pc'}
+                   'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
         # Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
         if request.user.is_admin:
             return HttpResponse(render(request, 'inicio/inicioAdmin.html', context))
@@ -60,7 +61,7 @@ def index(request):
                 #e = Empleado.objects.get(usuario=request.user)
                 #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
                 context = {'nombre': p.nombre, 'admin': request.user.is_admin,
-                           'personal': request.user.is_personal, 'pc': 'pc'}
+                           'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
                 # Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
                 if request.user.is_admin:
                     return HttpResponse(render(request, 'inicio/inicioAdmin.html', context))

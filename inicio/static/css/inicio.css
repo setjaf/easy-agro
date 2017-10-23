@@ -1,3 +1,4 @@
+/* Navbar Styles */
 .nm-main-navbar{
   background-color: #ebebeb;
   color: #222;
@@ -51,4 +52,59 @@
   width: 35px;
   border: 2px solid #373737;
   border-radius: 50%;
+}
+/*Overview*/
+.nm-user-msg{
+  margin: 20px 0;
+}
+.nm-user-msg h3{
+  font-size: 30px;
+  line-height: 40px;
+  margin: 0;
+}
+.nm-user-msg p{
+  line-height: 14px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: #3b3b3b;
+  text-transform: uppercase;
+}
+/* Central menu */
+.nm-central-menu{
+  margin: 10px 0px 10px 0px;
+}
+.nm-square-menu{
+  height: 100px;
+  width: 100%;
+  margin: 10px 0px;
+  padding: 10px 5px;
+  border-radius: 5px;
+}
+.nm-square-menu a{
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 14px;
+  line-height: 11px;
+  font-weight: 400;
+}
+.nm-square-menu i{
+  width: 100%;
+  font-size: 35px;
+  height: 40px;
+  color: #126f48;
+  line-height: initial !important;
+}
+.nm-opt-ready{
+  background-color: #1bbd79;
+}
+.nm-opt-ready a i{
+  color: #126f48;
+}
+.nm-opt-dis{
+  background-color: #969696;
+}
+.nm-opt-dis a i{
+  color: #343434;
 }
