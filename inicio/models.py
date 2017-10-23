@@ -81,7 +81,7 @@ class Productor(models.Model):
     fecha_inclusion = models.DateTimeField('dia_creado', auto_now_add=False)
 
     def __str__(self):
-        return self.nombre + " - " + self.localidad
+        return str(self.nombre + " - " + self.localidad)
 
 
 class Huerto(models.Model):
@@ -111,7 +111,7 @@ class ProductoCampo(models.Model):
 
     def __str__(self):
         # +" - "+self.fecha_recepcion.strftime('%d/%m/%Y - %X')
-        return self.Productor.nombre
+        return self.Productor.nombre + " - " + self.Productor.localidad
 
 
 class Status_pc(models.Model):
@@ -155,7 +155,7 @@ class Status_pco(models.Model):
     fecha = models.DateTimeField('dia_creado', auto_now_add=True)
     estado = EnumField(choices=[
                        ('f', 'Camara Fria'), ('a', 'Almacen'), ('c', 'Camino'), ('e', 'Entregada')])
-    IDProductoCampo = models.ForeignKey(
+    IDProductoCorrida = models.ForeignKey(
         'ProductoCorrida', on_delete=models.CASCADE, unique=False, null=False, blank=False)
 
 

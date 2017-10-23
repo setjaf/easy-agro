@@ -61,7 +61,7 @@ class Status_cor(ModelForm):
 
 class NuevaCorrida(MultiModelForm):
     form_classes = {
-        'corrida':Recepcion,
+        'corrida':Corrida,
         'status':Status_cor,
     }
 

@@ -99,7 +99,7 @@ def index(request):
     return HttpResponse(render(request, 'inicio/login.html', context))
 
 
-def nuevaCorrida(request):
+def nuevaCorrida(request, prodc_id=False):
     if request.user.is_authenticated:
         message = None
         form1 = filtroProductor()
@@ -113,9 +113,20 @@ def nuevaCorrida(request):
         form1.fields["municipio"].choices = choices
 
         form = NuevaCorrida()
-        #form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
-        form.fields['ProductoCampo'].queryset = ProductoCampo.objects.exclude(
-            status='t')
+        form['corrida'].fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+        empleado=Empleado.objects.get(usuario=request.user)
+        recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
+        recepcionesLista=list()
+        for recepcion in recepciones:
+            status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+            if status.estado=='c' or status.estado=='a':
+                recepcionesLista.append((recepcion.IDProductoCampo,recepcion))
+
+        recepcionesLista.insert(0, ("---------", "---------"))
+        form['corrida'].fields["ProductoCampo"].choices = recepcionesLista
+        if prodc_id:
+            #print dir(form['corrida'].fields["ProductoCampo"])
+            form['corrida'].fields["ProductoCampo"].initial = ProductoCampo.objects.get(pk=prodc_id)
         # Se verifica si el metodo de envio fue post
         if request.method == "POST":
             # Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
@@ -127,31 +138,41 @@ def nuevaCorrida(request):
 
             # Inicia proceso de registro de recepción
             form = NuevaCorrida(request.POST)
-            # if form.is_valid():
-            #    form.save()
-            #    return redirect('/')
+            form['corrida'].fields['fecha_compra'].required=False
+            print form['corrida'].fields['fecha_compra'].value
+            print form['corrida'].fields['calibre'].value
+            print form['corrida'].fields['ProductoCampo'].value
+            if form.is_valid():
+                corrida = form['corrida'].save()
+                status = form['status'].save(commit=False)
+                status.IDProductoCampo = corrida
+                status.save()
+                return redirect('/')
 
-            form.fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+            form['corrida'].fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
 
             if ("localidad" in request.POST) and ("municipio" in request.POST):
                 if request.POST['localidad'] == '---------' and request.POST['municipio'] != '---------':
-                    prod = Productor.objects.filter(
+                    productores = Productor.objects.filter(
                         municipio=request.POST['municipio'])
                 elif request.POST['municipio'] == '---------' and request.POST['localidad'] != '---------':
-                    prod = Productor.objects.filter(
+                    productores = Productor.objects.filter(
                         localidad=request.POST['localidad'])
                 elif request.POST['municipio'] != '---------' and request.POST['localidad'] != '---------':
-                    prod = Productor.objects.filter(
+                    productores = Productor.objects.filter(
                         localidad=request.POST['localidad'], municipio=request.POST['municipio'])
                 else:
-                    prod = Productor.objects.all()
-                lpc = []
-                for p in prod:
-                    pc = ProductoCampo.objects.filter(Productor=p)
-                    if pc and pc[0].status != 't':
-                        lpc.append((pc[0].IDProductoCampo, pc[0]))
-                lpc.insert(0, ("---------", "---------"))
-                form['corrida'].fields["ProductoCampo"].choices = lpc
+                    productores = Productor.objects.all()
+                recepcionesLista=list()
+                empleado=Empleado.objects.get(usuario=request.user)
+                for productor in productores:
+                    recepciones=ProductoCampo.objects.all().filter(Empleado=empleado,Productor=productor).order_by('fecha_recepcion')
+                    for recepcion in recepciones:
+                        status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
+                        if status.estado=='c' or status.estado=='a':
+                            recepcionesLista.append((recepcion.IDProductoCampo,recepcion))
+                recepcionesLista.insert(0, ("---------", "---------"))
+                form['corrida'].fields["ProductoCampo"].choices = recepcionesLista
                 #form.fields["ProductoCampo"].queryset = pg.exclude(status='t')
                 form1.fields["localidad"].initial = request.POST['localidad']
                 form1.fields["municipio"].initial = request.POST['municipio']
@@ -165,6 +186,7 @@ def nuevaCorrida(request):
             '''print calibres
             d.update({"prueba":"prueba"})'''
             calibres.sort()
+
         form['corrida'].fields["calibre"].choices = calibres
         context = {'message': message, 'form': form,
                    'form1': form1, 'admin': request.user.is_admin}
@@ -306,9 +328,12 @@ def nuevaRecepcion(request):
                         print p2
                         print p3
 
-                context = {'forms': formset, 'form': form, 'form1': form2,
-                           'nforms': numform, 'mensaje': 'Registro exitoso'}
-                return HttpResponse(render(request, 'inicio/recepcion.html', context))
+                if not status.estado=='c' and not status.estado=='a':
+                    context = {'forms': formset, 'form': form, 'form1': form2,
+                               'nforms': numform, 'mensaje': 'Registro exitoso'}
+                    return HttpResponse(render(request, 'inicio/recepcion.html', context))
+                else:
+                    return redirect('/corrida/nueva'+recepcion.IDProductoCampo)
                 '''if form.is_valid():
                     m=form.save(commit=False)
                     print m'''
@@ -328,6 +353,13 @@ def nuevaRecepcion(request):
 
 def listaRecepcion(request):
     if request.user.is_authenticated:
+        if request.method == "POST":
+            # Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
+            if "salir" in request.POST:
+                # Si nos estan mandando la informacion correcta realizamos el proceso del logout
+                logout(request)
+                # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
+                return redirect('/')
         empleado=Empleado.objects.get(usuario=request.user)
         recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
         recepcionesLista=[]
@@ -364,24 +396,29 @@ def modRecepcion(request, prodc_id):
             # Inicia proceso de registro de recepción
             form = NuevaRecepcion(request.POST, request.FILES)
             if form.is_valid():
-                p = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
-                p.calidad_aprox = request.POST['recepcion-calidad_aprox']
-                p.representante = request.POST['recepcion-representante']
+                recepcion = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
+                recepcion.calidad_aprox = request.POST['recepcion-calidad_aprox']
+                recepcion.representante = request.POST['recepcion-representante']
                 if "firma" in request.FILES:
-                    p.firma = request.FILES['firma']
-                p.save()
-                status=Status_pc.objects.filter(IDProductoCampo=p).order_by('fecha').last()
+                    recepcion.firma = request.FILES['firma']
+                recepcion.save()
+                status=Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
                 if not status.estado==request.POST['status-estado']:
-                    status=Status_pc(IDProductoCampo=p, estado=request.POST['status-estado'])
+                    status=Status_pc(IDProductoCampo=recepcion, estado=request.POST['status-estado'])
                     status.save()
-                pc = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
-                status = Status_pc.objects.filter(IDProductoCampo=pc).order_by('fecha').last()
+                recepcion = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
+                status = Status_pc.objects.filter(IDProductoCampo=recepcion).order_by('fecha').last()
                 form = NuevaRecepcion(instance={
-                    'recepcion':pc,
+                    'recepcion':recepcion,
                     'status': status
                 })
-                context = {'form': form}
-                return HttpResponse(render(request, 'inicio/recepcionMod.html', context))
+                print status.estado
+                if not status.estado=='c' and not status.estado=='a':
+                    context = {'form': form}
+                    return HttpResponse(render(request, 'inicio/recepcionMod.html', context))
+                else:
+                    return redirect('/corrida/nueva/'+str(recepcion.IDProductoCampo))
+
                 #return redirect('/recepcion')
         pc = ProductoCampo.objects.get(IDProductoCampo=prodc_id)
         status = Status_pc.objects.filter(IDProductoCampo=pc).order_by('fecha').last()
