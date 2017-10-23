@@ -113,7 +113,7 @@ def nuevaCorrida(request, prodc_id=False):
         form1.fields["municipio"].choices = choices
 
         form = NuevaCorrida()
-        form['corrida'].fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
+
         empleado=Empleado.objects.get(usuario=request.user)
         recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
         recepcionesLista=list()
@@ -138,18 +138,15 @@ def nuevaCorrida(request, prodc_id=False):
 
             # Inicia proceso de registro de recepción
             form = NuevaCorrida(request.POST)
-            form['corrida'].fields['fecha_compra'].required=False
-            print form['corrida'].fields['fecha_compra'].value
-            print form['corrida'].fields['calibre'].value
-            print form['corrida'].fields['ProductoCampo'].value
-            if form.is_valid():
+            print form['corrida'].has_error.im_self
+            '''if form.is_valid():
                 corrida = form['corrida'].save()
                 status = form['status'].save(commit=False)
                 status.IDProductoCampo = corrida
                 status.save()
                 return redirect('/')
+            '''
 
-            form['corrida'].fields['fecha_compra'].widget.attrs['class'] = 'datepicker'
 
             if ("localidad" in request.POST) and ("municipio" in request.POST):
                 if request.POST['localidad'] == '---------' and request.POST['municipio'] != '---------':
@@ -176,18 +173,7 @@ def nuevaCorrida(request, prodc_id=False):
                 #form.fields["ProductoCampo"].queryset = pg.exclude(status='t')
                 form1.fields["localidad"].initial = request.POST['localidad']
                 form1.fields["municipio"].initial = request.POST['municipio']
-        base = os.path.dirname(os.path.abspath(__file__))
-        with open(os.path.join(base, 'static/datos/calibres.json'), "r+") as json_data:
-            d = json.load(json_data)
-            # print d
-            json_data.close()
-            calibres = [(key, d[key])for key in d]
-            calibres.insert(0, ("---------", "---------"))
-            '''print calibres
-            d.update({"prueba":"prueba"})'''
-            calibres.sort()
 
-        form['corrida'].fields["calibre"].choices = calibres
         context = {'message': message, 'form': form,
                    'form1': form1, 'admin': request.user.is_admin}
         return HttpResponse(render(request, 'inicio/corrida.html', context))

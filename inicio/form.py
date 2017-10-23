@@ -42,16 +42,13 @@ class NuevaPrueba(ModelForm):
     class Meta:
         model = Prueba
         fields = ['kilogramos']
-        widget = {
-            'kilogramos': forms.DecimalField(required=True)
-        }
-
 class Corrida(ModelForm):
     class Meta:
         model = ProductoCorrida
         fields=['calibre','kilogramos','fecha_compra','folio','Producto','ProductoCampo']
         widget = {
-            'fecha_compra': forms.CharField(widget=forms.TextInput(attrs={'class':'datepicker'}))
+            'fecha_compra': forms.CharField(required=False,widget=forms.TextInput(attrs={'class':'datepicker'})),
+            'calibre': forms.ChoiceField(widget=forms.Select())
         }
 
 class Status_cor(ModelForm):
