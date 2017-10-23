@@ -23,7 +23,7 @@
           <a href="{% url 'index' %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
           <div class="linea"></div>
           {% if admin %}
-          <p>Administrador</p>
+          <p>Administrador </p>
           {% else %}
           <p>Personal</p>
           {% endif %}
@@ -44,7 +44,7 @@
       <div class="row center">
 
         <div class="col m12 s12 l8 offset-l2 nomBienv">
-          <h5>¡Hola! <b>{{nombre}}</b></h5>
+          <h5>Buen día <b>{{nombre}}</b></h5>
         </div>
 
         <div class="col m12 s12 l8 offset-l2">
@@ -62,30 +62,30 @@
 
         <div class="col m12 s12 l8 offset-l2 pendientes">
           <ul class="collection with-header">
-            <li class="collection-header">Pendientes hoy:</h4></li>
-            
+            <li class="collection-header"><h4>Pendientes hoy:</h4></li>
             {%for recepcion in recepciones%}
-              <li class="collection-item">
+            <li class="collection-item">
 
-                <div>
-                  <span>{{recepcion.fecha}}</span>
-                  <span>{{recepcion.productor}}</span>
-                  {%if recepcion.status == "p"%}
-                    <span>Pendiente</span>
-                  {%elif recepcion.status == "r"%}
-                    <span>Reposo</span>
-                  {%elif recepcion.status == "c"%}
-                    <span>Completada</span>
-                  {%else%}
-                    <span>Pagada</span>
-                  {%endif%}
-                  <a href="{% url 'modRecepcion' recepcion.idproducto %}" class="secondary-content">
-                    <i class="material-icons">send</i>
-                  </a>
-                </div>
+              <div>
+                <span>{{recepcion.fecha}}</span>
+                <span>{{recepcion.productor}}</span>
+                {%if recepcion.status == "p"%}
+                  <span>Pendiente</span>
+                {%elif recepcion.status == "r"%}
+                  <span>Reposo</span>
+                {%elif recepcion.status == "c"%}
+                  <span>Completada</span>
+                {%else%}
+                  <span>Pagada</span>
+                {%endif%}
+                <a href="{% url 'modRecepcion' recepcion.idproducto %}" class="secondary-content">
+                  <i class="material-icons">send</i>
+                </a>
+              </div>
 
-              </li>
+            </li>
             {%endfor%}
+
           </ul>
 
         </div>
