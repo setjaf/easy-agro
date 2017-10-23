@@ -41,7 +41,8 @@ def index(request):
         #e = Empleado.objects.get(usuario=request.user)
         #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
         context = {'nombre': p.nombre, 'admin': request.user.is_admin,
-                   'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
+                   'personal': request.user.is_personal, 'pc': 'pc',
+                   'version': __VERSION,}
         empleado = Empleado.objects.get(usuario=request.user.id)
         recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
         recepcionesLista=[]
@@ -78,6 +79,7 @@ def index(request):
                 # Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
                 #e = Empleado.objects.get(usuario=request.user)
                 #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
+                p = Empleado.objects.get(usuario=request.user.id)
                 context = {'nombre': p.nombre, 'admin': request.user.is_admin,
                            'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
                 recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
