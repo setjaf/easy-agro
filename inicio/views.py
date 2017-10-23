@@ -16,6 +16,7 @@ from .form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, Nueva
 from .models import ProductoCampo, Caja, Empleado, Productor, Caja, Prueba, Usuario, Status_pc
 import json
 
+__VERSION = 1.0
 
 def index(request):
     # Se inicializa la variable mensaje con None para  no mostrar mensaje el la primera petición
@@ -35,6 +36,12 @@ def index(request):
                 # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return HttpResponse(render(request, 'inicio/login.html', context))
         # Si el metodo no es POST, nos indica que debemos renderizar la página inicial de un usario autentificado, obtenemos la informacion del objeto Personal
+        p = Empleado.objects.get(usuario=request.user.id)
+        # Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
+        #e = Empleado.objects.get(usuario=request.user)
+        #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
+        context = {'nombre': p.nombre, 'admin': request.user.is_admin,
+                   'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
         empleado = Empleado.objects.get(usuario=request.user.id)
         recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
         recepcionesLista=[]
@@ -52,6 +59,7 @@ def index(request):
                 recepcionesLista.append(diccionarioRecepcion)
         context = {'nombre': empleado.nombre, 'admin': request.user.is_admin,
                    'personal': request.user.is_personal, 'recepciones': recepcionesLista}
+
         # Por último regresamos la función HttpResponse, que hace el render del template inicio con la información del personal
         if request.user.is_admin:
             return HttpResponse(render(request, 'inicio/inicioAdmin.html', context))
@@ -68,6 +76,10 @@ def index(request):
                 message = 'Te has autentificado correctamente'
                 empleado = Empleado.objects.get(usuario=request.user.id)
                 # Ahora en el contexto se agrega un diccionario que contiene la información del usuario autentificado
+                #e = Empleado.objects.get(usuario=request.user)
+                #pc = ProductoCampo.objects.filter(Empleado=e).exclude(status='t')
+                context = {'nombre': p.nombre, 'admin': request.user.is_admin,
+                           'personal': request.user.is_personal, 'pc': 'pc', 'version': __VERSION,}
                 recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
                 recepcionesLista=[]
                 for recepcion in recepciones:
