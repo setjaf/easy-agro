@@ -1,0 +1,54 @@
+.nm-main-navbar{
+  background-color: #ebebeb;
+  color: #222;
+}
+.nm-user{
+  margin: 0 0 0 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 100%;
+}
+.nm-user .linea {
+  margin: auto 10px;
+  height: 80%;
+  border: 1px solid #bebebe;
+}
+.nm-user a{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #373737;
+}
+.nm-user a > i{
+  line-height: 30px;
+  text-align: center;
+  height: 35px;
+  width: 35px;
+  border: 2px solid #373737;
+  border-radius: 50%;
+}
+.nm-user p{
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.nm-close{
+  margin-right: 20px;
+}
+.nm-close a{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #373737;
+}
+.nm-close a > i{
+  line-height: 30px;
+  margin-top: 10px;
+  text-align: center;
+  height: 35px;
+  width: 35px;
+  border: 2px solid #373737;
+  border-radius: 50%;
+}

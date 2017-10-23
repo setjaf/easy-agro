@@ -8,31 +8,43 @@
     <title>Easy Agro</title>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
-    <link rel="stylesheet" href="{% static "css/styles.css"%}">
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'vendor/css/materialize.css'%}">
+    <link rel="stylesheet" href="{% static 'css/styles.css'%}">
+    <link rel="stylesheet" href="{% static 'css/master.css'%}">
+    <link rel="stylesheet" href="{% static 'css/inicio.css'%}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+    <!-- Scripts -->
+    <script src="{% static 'vendor/js/jquery.min.js'%}" charset="utf-8"></script>
+    <script src="{% static 'vendor/js/materialize.js'%}" charset="utf-8"></script>
 
   </head>
 
   <body>
 
-    <nav>
-      <div class="nav-wrapper grey lighten-2">
+    <script type="text/javascript">
+      // Initilize the toast function
+      $(document).ready( function(){
+        $('.tooltipped').tooltip({delay: 50});
+      });
+    </script>
 
-        <div class="left grey-text text-darken-4 tipoUs">
-          <a href="{% url 'index' %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
+    <nav class="z-depth-0 nm-main-navbar">
+      <div class="nav-wrapper">
+        <div class="left grey-text text-darken-4 nm-user">
+          <a href="{% url 'index' %}"><i class="material-icons">home</i></a>
           <div class="linea"></div>
           {% if admin %}
-          <p>Administrador</p>
+          <p>ADMIN</p>
           {% else %}
-          <p>Personal</p>
+          <p>NORMAL</p>
           {% endif %}
         </div>
 
-        <div class="col right salir">
+        <div class="col right nm-close">
   				<form class="" method="post">{% csrf_token %}
             <input type="text" name="salir" value="True" style="display:none" >
-  				  <button class="btn waves-effect waves-light" type="submit">Salir</button>
+  				  <a class="z-depth-0" type="submit"><i class="material-icons">close</i></a>
   				</form>
   			</div>
       </div>
@@ -63,7 +75,7 @@
         <div class="col m12 s12 l8 offset-l2 pendientes">
           <ul class="collection with-header">
             <li class="collection-header">Pendientes hoy:</h4></li>
-            
+
           </ul>
 
         </div>

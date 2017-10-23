@@ -3,9 +3,11 @@
  * EasyAgro Team
  * Oct-2017
  */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900');
 *, body{
   padding: 0;
   margin:0 auto;
+  font-family: 'Roboto', sans-serif;
 }
 /* Some util styles */
 .nm-submit{
