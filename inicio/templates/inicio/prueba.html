@@ -20,7 +20,7 @@
       <div class="nav-wrapper grey lighten-2">
 
         <div class="left grey-text text-darken-4 tipoUs">
-          <a href="{% url 'index' %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
+          <a href="{% url "index" %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
           <div class="linea"></div>
           {% if admin %}
           <p>Administrador</p>
@@ -43,25 +43,134 @@
 
   		<div class="row center">
         <div class="col l10 m12 s12 offset-l1 left-align">
-          <ul class="collection with-header">
-            <li class="collection-header"><h4 class="titRec">Recepción<span>/limón</span></h4></li>
-            {%for recepcion in recepciones%}
-              <li class="collection-item">
+          <h1 class="titRec">Recepción<span>/limón</span></h1>
+        </div>
+        <div class="col m12 s12 l8 offset-l2">
+          <div class="col s12 m12 l12">
+            <h5 class="red-text text-darken-2">{{mensaje}}</h5>
+          </div>
+          <div class="col l12 m12 s12">
+            <form class="" id="filtro" method="post">{% csrf_token %}
+              <h5>Encontrar Productor</h5>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Localidad:</label>
+                {{form1.localidad}}
+              </div>
 
-                <div>
-                  <span>{{recepcion.productor}}</span>
-                  <span>{{recepcion.fecha}}</span>
-                  <span>{{recepcion.status}}</span>
-                  <a href="{% url 'modRecepcion' recepcion.idproducto %}" class="secondary-content">
-                    <i class="material-icons">send</i>
-                  </a>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Municipio:</label>
+                {{form1.municipio}}
+              </div>
+              <input type="hidden" name="numform" value="{{nforms}}">
+            </form>
+          </div>
+          <form method="post" id="recepcion" enctype="multipart/form-data">{% csrf_token %}
+            <div class="col s12 m12 l12">
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Productor:</label>
+                {{form.recepcion.Productor}}
+              </div>
+              <div class="col l12 m12 s12">
+                <h5>Información Recepcion</h5>
+              </div>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Calidad Aprox:</label>
+                {{form.recepcion.calidad_aprox}}
+              </div>
+              <div class="select truncate input-field col s12 m6 l6">
+                <label for="">Firma:</label>
+                {{form.recepcion.firma}}
+              </div>
+              <div class="select input-field col s12 m6 l6">
+                <label for="">Status:</label>
+                {{form.status.estado}}
+              </div>
+              <div class="text input-field col s12 m6 l6">
+                <label for="">Representante:</label>
+                {{form.recepcion.representante}}
+              </div>
+            </div>
+            <div class="cajas" id="cajas">
+              {% for caja in cajas%}
+                <div class="col m12 s12 l12 caja_mostrar">
+                  <h5>Nueva Caja</h5>
+                  <i class="material-icons prefix" style="color:#26a69a;">keyboard_arrow_down</i>
                 </div>
 
-              </li>
-            {%endfor%}
-          </ul>
-        </div>
+                <div class="col m12 s12 l12 caja-nueva ">
+                  <div class="select input-field col s12 m12 l12">
+                    <label for="">Peso Neto:</label>
+                    {{caja.caja.peso_neto}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Color:</label>
+                    {{caja.caja.color}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Cantidad:</label>
+                    {{caja.caja.cantidad}}
+                  </div>
+                  <div class="select input-field col s12 m12 l12">
+                    <label for="">Tamaño:</label>
+                    {{caja.caja.tamanio}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Alto:</label>
+                    {{caja.caja.alto}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Ancho:</label>
+                    {{caja.caja.ancho}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Largo:</label>
+                    {{caja.caja.largo}}
+                  </div>
 
+                  <div class="col s12 m12 l6">
+                      <h5>Prueba 1</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba1.kilogramos}}
+                      </div>
+
+                      <h5>Prueba 2</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba2.kilogramos}}
+                      </div>
+                      <h5>Prueba 3</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba3.kilogramos}}
+                      </div>
+                  </div>
+
+                <div class="col s12 m12 l6">
+                  <div class="divider"></div>
+                  <div class="section">
+                    <h5>Peso Total Aproximado:</h5>
+                    <h3 class="totPeso" id="pesoTotal">---</h3>
+                  </div>
+                </div>
+                <div class="col s12 m12 l6">
+                  <div class="divider"></div>
+                  <div class="section">
+                    <h5>Peso Promedio:</h5>
+                    <h3 class="totPeso" id="pesoProm">---</h3>
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+            </div>
+
+            <input type="hidden" name="numcajas" value="{{numcajas}}">
+            <button class="btn waves-effect waves-light" type="submit">Guardar Recepción</button>
+            <button class="btn waves-effect waves-light" id="borrar" >Borrar Caja</button>
+            <button class="btn waves-effect waves-light" id="agregar">Agregar Caja</button>
+          </form>
+
+        </div>
 
   		</div>
 
@@ -70,15 +179,135 @@
 
 
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('select').material_select();
-      });
+
+    $(document).ready(function() {
+
       $("#loc").change(function() {
         $("#filtro").submit();
       })
+
       $("#mun").change(function() {
         $("#filtro").submit();
       })
+
+      var numcajas={{numcajas}};
+      var mostrarcaja=$("div.caja_mostrar:eq(1)"),nuevacaja=$("div.caja-nueva:eq(1)");
+      $('select').material_select();
+      $("div.caja-nueva").slideToggle( "slow" );
+      console.log($("div.caja-nueva:eq(0) > div > div > #pesoProm"));
+      if (numcajas==1) {
+        $("div.caja_mostrar:eq(1)").remove()
+        $("div.caja-nueva:eq(1)").remove()
+        $("div.caja_mostrar:eq(1)").remove()
+        $("div.caja-nueva:eq(1)").remove()
+      }else if(numcajas==2){
+        $("div.caja_mostrar:eq(2)").remove()
+        $('div.caja-nueva:eq(2)').remove()
+      }
+      $("div.caja_mostrar:eq(0)").click(function(ev) {
+        $('div.caja-nueva:eq(0)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+      $("div.caja_mostrar:eq(1)").click(function(ev) {
+        $('div.caja-nueva:eq(1)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+      $("div.caja_mostrar:eq(2)").click(function(ev) {
+        $('div.caja-nueva:eq(2)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+
+      $("#borrar").click(function() {
+        $('#recepcion').append("<input type=\"hidden\" name=\"borrarform\" value=\"{{numcajas}}\">")
+        $('#recepcion').submit()
+      });
+
+      $("#agregar").click(function() {
+        $('#recepcion').append("<input type=\"hidden\" name=\"agregform\" value=\"{{numcajas}}\">")
+        $('#recepcion').submit()
+      });
+
+      $("#id_prueba1__1-kilogramos").change(function(ev) {
+
+        var $prueba2=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba2__1-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba3__1-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_caja__1-cantidad").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba1=$("#id_prueba3__1-kilogramos")[0].value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =ev.target.value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+
+    });
+
+
     </script>
   </body>
 </html>

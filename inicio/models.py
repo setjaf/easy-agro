@@ -138,6 +138,8 @@ class Calibre(models.Model):
     IDCalibre = models.AutoField(primary_key=True, null=False)
     Valor = models.CharField(max_length=100, blank=False, null=False)
     Descripcion = models.CharField(max_length=100, blank=False, null=False)
+    def __str__(self):
+        return self.Valor
 
 class ProductoCorrida(models.Model):
     IDProductoCorrida = models.AutoField(primary_key=True, null=False)
@@ -146,7 +148,7 @@ class ProductoCorrida(models.Model):
     kilogramos = models.DecimalField(
         max_digits=10, decimal_places=3, default=0, blank=False, null=False)
     fecha_inclusion = models.DateTimeField('dia_creado', auto_now_add=True)
-    fecha_compra = models.DateField('dia_creado', auto_now_add=False)
+    fecha_compra = models.DateField('dia_creado', auto_now_add=False, blank=True, null=True)
     folio = models.CharField(max_length=100, blank=False, null=False)
     Producto = models.ForeignKey(
         'Producto', on_delete=models.CASCADE, unique=False, null=False, blank=False)

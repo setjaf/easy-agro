@@ -20,7 +20,7 @@
       <div class="nav-wrapper grey lighten-2">
 
         <div class="left grey-text text-darken-4 tipoUs">
-          <a href="{% url 'index' %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
+          <a href="{% url "index" %}" class="logo"><img src="{% static "images/short-icon.png"%}" alt=""></a>
           <div class="linea"></div>
           {% if admin %}
           <p>Administrador</p>
@@ -90,51 +90,70 @@
                 {{form.recepcion.representante}}
               </div>
             </div>
-            {%for form in forms%}
-              <div class="col m12 s12 l12 caja_mostrar">
-                <h5>Nueva Caja</h5>
-                <i class="material-icons prefix" style="color:#26a69a;">keyboard_arrow_down</i>
-              </div>
+            <div class="cajas" id="cajas">
+              {% for caja in cajas%}
+                <div class="col m12 s12 l12 caja_mostrar">
+                  <h5>Nueva Caja</h5>
+                  <i class="material-icons prefix" style="color:#26a69a;">keyboard_arrow_down</i>
+                </div>
 
-              <div class="col m12 s12 l12 caja">
-
-              {%for field in form%}
-
-                {%if field.label == "Peso neto"%}
-                  <div class="select input-field col s12 m6 l6">
-                    <label for="">{{field.label}}:</label>
-                    {{field}}
+                <div class="col m12 s12 l12 caja-nueva ">
+                  <div class="select input-field col s12 m12 l12">
+                    <label for="">Peso Neto:</label>
+                    {{caja.caja.peso_neto}}
                   </div>
-                {%elif field.label == "Tamanio"%}
-                  <div class="select input-field col s12 m6 l6">
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Color:</label>
+                    {{caja.caja.color}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Cantidad:</label>
+                    {{caja.caja.cantidad}}
+                  </div>
+                  <div class="select input-field col s12 m12 l12">
                     <label for="">Tamaño:</label>
-                    {{field}}
+                    {{caja.caja.tamanio}}
                   </div>
-                {%elif field.label == "Kilogramos"%}
-                  <div class="col s12 m12 l12">
-                    <h5>Prueba</h5>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Alto:</label>
+                    {{caja.caja.alto}}
                   </div>
-                  <div class="text input-field col s12 m6 l6">
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Ancho:</label>
+                    {{caja.caja.ancho}}
+                  </div>
+                  <div class="text input-field col s12 m12 l12">
+                    <label for="">Largo:</label>
+                    {{caja.caja.largo}}
+                  </div>
 
-                    <label for="">{{field.label}}:</label>
-                    {{field}}
-                  </div>
-                {%else%}
-                  <div class="text input-field col s6 m6 l6">
-                    <label for="">{{field.label}}:</label>
-                    {{field}}
-                  </div>
-                {%endif%}
+                  <div class="col s12 m12 l6">
+                      <h5>Prueba 1</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba1.kilogramos}}
+                      </div>
 
-              {%endfor%}
-                <div class="col s12 m12 l12">
+                      <h5>Prueba 2</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba2.kilogramos}}
+                      </div>
+                      <h5>Prueba 3</h5>
+                      <div class="text input-field col s12 m12 l12">
+                        <label for="">Kilogramos:</label>
+                        {{caja.prueba3.kilogramos}}
+                      </div>
+                  </div>
+
+                <div class="col s12 m12 l6">
                   <div class="divider"></div>
                   <div class="section">
                     <h5>Peso Total Aproximado:</h5>
                     <h3 class="totPeso" id="pesoTotal">---</h3>
                   </div>
                 </div>
-                <div class="col s12 m12 l12">
+                <div class="col s12 m12 l6">
                   <div class="divider"></div>
                   <div class="section">
                     <h5>Peso Promedio:</h5>
@@ -143,7 +162,9 @@
                 </div>
               </div>
             {%endfor%}
-            <input type="hidden" name="numform" value="{{nforms}}">
+            </div>
+
+            <input type="hidden" name="numcajas" value="{{numcajas}}">
             <button class="btn waves-effect waves-light" type="submit">Guardar Recepción</button>
             <button class="btn waves-effect waves-light" id="borrar" >Borrar Caja</button>
             <button class="btn waves-effect waves-light" id="agregar">Agregar Caja</button>
@@ -160,330 +181,289 @@
     <script type="text/javascript">
 
     $(document).ready(function() {
+
+      $("#loc").change(function() {
+        $("#filtro").submit();
+      })
+
+      $("#mun").change(function() {
+        $("#filtro").submit();
+      })
+
+      var numcajas={{numcajas}};
+      var mostrarcaja=$("div.caja_mostrar:eq(1)"),nuevacaja=$("div.caja-nueva:eq(1)");
       $('select').material_select();
-      $('.caja').slideToggle( "slow" );
-      $caja1=$("#recepcion").children("div.caja:eq(0)");
-      $caja2=$("#recepcion").children("div.caja:eq(1)");
-      $caja3=$("#recepcion").children("div.caja:eq(2)");
-      if ($caja1) {
-        var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
-        var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
-        var $prueba2=$caja1.children("div:nth-child(11)").children("input")[0].value;
+      $("div.caja-nueva").slideToggle( "slow" );
+      console.log($("div.caja-nueva:eq(0) > div > div > #pesoProm"));
+      if (numcajas==1) {
+        $("div.caja_mostrar:eq(1)").remove()
+        $("div.caja-nueva:eq(1)").remove()
+        $("div.caja_mostrar:eq(1)").remove()
+        $("div.caja-nueva:eq(1)").remove()
+      }else if(numcajas==2){
+        $("div.caja_mostrar:eq(2)").remove()
+        $('div.caja-nueva:eq(2)').remove()
+      }
+      $("div.caja_mostrar:eq(0)").click(function(ev) {
+        $('div.caja-nueva:eq(0)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+      $("div.caja_mostrar:eq(1)").click(function(ev) {
+        $('div.caja-nueva:eq(1)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+      $("div.caja_mostrar:eq(2)").click(function(ev) {
+        $('div.caja-nueva:eq(2)').slideToggle( "slow" );
+      //  console.log($('div.caja'))
+      })
+
+      $("#borrar").click(function() {
+        $('#recepcion').append("<input type=\"hidden\" name=\"borrarform\" value=\"{{numcajas}}\">")
+        $('#recepcion').submit()
+      });
+
+      $("#agregar").click(function() {
+        $('#recepcion').append("<input type=\"hidden\" name=\"agregform\" value=\"{{numcajas}}\">")
+        $('#recepcion').submit()
+      });
+
+      $("#id_prueba1__1-kilogramos").change(function(ev) {
+
+        var $prueba2=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
 
         console.log($prueba2,$prueba1,$prueba3);
 
         var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-        var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
 
         var total = Number(cantidad)*prom;
 
         console.log(prom, cantidad, total);
 
-        $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-        $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      }
-      if ($caja2) {
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba2__1-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
 
-        var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
-        var $prueba3=$caja2.children("div:nth-child(13)").children("input")[0].value;
-        var $prueba2=$caja2.children("div:nth-child(11)").children("input")[0].value;
-
-        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-        var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
-
-        var total = Number(cantidad)*prom;
-
-        $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-        $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      }
-      if ($caja3) {
-
-        var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
-        var $prueba3=$caja3.children("div:nth-child(13)").children("input")[0].value;
-        var $prueba2=$caja3.children("div:nth-child(11)").children("input")[0].value;
+        console.log($prueba2,$prueba1,$prueba3);
 
         var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
 
-        var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
 
         var total = Number(cantidad)*prom;
 
-        $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-        $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      }
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba3__1-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__1-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_caja__1-cantidad").change(function(ev) {
+        var $prueba2=$("#id_prueba1__1-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__1-kilogramos")[0].value;
+        var $prueba1=$("#id_prueba3__1-kilogramos")[0].value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =ev.target.value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(0) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(0) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      /*--------------------------------------*/
+
+      $("#id_prueba1__2-kilogramos").change(function(ev) {
+
+        var $prueba2=$("#id_prueba2__2-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__2-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__2-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(1) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(1) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba2__2-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__2-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__2-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__2-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(1) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(1) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba3__2-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__2-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__2-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__2-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(1) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(1) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_caja__2-cantidad").change(function(ev) {
+        var $prueba2=$("#id_prueba1__2-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__2-kilogramos")[0].value;
+        var $prueba1=$("#id_prueba3__2-kilogramos")[0].value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =ev.target.value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(1) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(1) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+
+      $("#id_prueba1__3-kilogramos").change(function(ev) {
+
+        var $prueba2=$("#id_prueba2__3-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__3-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__3-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(2) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(2) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba2__3-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__3-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba3__3-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__3-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(2) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(2) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_prueba3__3-kilogramos").change(function(ev) {
+        var $prueba2=$("#id_prueba1__3-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__3-kilogramos")[0].value;
+        var $prueba1=ev.target.value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =$("#id_caja__3-cantidad")[0].value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(2) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(2) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+      $("#id_caja__3-cantidad").change(function(ev) {
+        var $prueba2=$("#id_prueba1__3-kilogramos")[0].value;
+        var $prueba3=$("#id_prueba2__3-kilogramos")[0].value;
+        var $prueba1=$("#id_prueba3__3-kilogramos")[0].value;
+
+        console.log($prueba2,$prueba1,$prueba3);
+
+        var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
+
+        var cantidad =ev.target.value;
+
+        var total = Number(cantidad)*prom;
+
+        console.log(prom, cantidad, total);
+
+        $("div.caja-nueva:eq(2) > div > div > #pesoTotal")[0].textContent=total.toFixed(2)
+        $("div.caja-nueva:eq(2) > div > div > #pesoProm")[0].textContent=prom.toFixed(2)
+        console.log(ev);
+      });
+
     });
-    $("div.caja_mostrar:eq(0)").click(function(ev) {
-      $('div.caja:eq(0)').slideToggle( "slow" );
-    //  console.log($('div.caja'))
-    })
 
-    $("div.caja_mostrar:eq(1)").click(function(ev) {
-      $('div.caja:eq(1)').slideToggle( "slow" );
-    //  console.log($('div.caja'))
-    })
-
-    $("div.caja_mostrar:eq(2)").click(function(ev) {
-      $('div.caja:eq(2)').slideToggle( "slow" );
-    //  console.log($('div.caja'))
-    })
-
-    $("#loc").change(function() {
-      $("#filtro").submit();
-    })
-
-    $("#mun").change(function() {
-      $("#filtro").submit();
-    })
-
-    $("#agregar").click(function(ev) {
-
-      $('#recepcion').append("<input type=\"hidden\" name=\"agregform\" value=\"{{nforms}}\">")
-      $('#recepcion').submit()
-    })
-
-    $("#borrar").click(function(ev) {
-      $('#recepcion').append("<input type=\"hidden\" name=\"borrarform\" value=\"{{nforms}}\">")
-      $('#recepcion').submit()
-    })
-
-    $caja1=$("#recepcion").children("div.caja:eq(0)");
-    $caja2=$("#recepcion").children("div.caja:eq(1)");
-    $caja3=$("#recepcion").children("div.caja:eq(2)");
-
-    $caja1.children("div:nth-child(11)").children("input").change(function(ev){
-
-      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja1.children("div:nth-child(9)").children("input").change(function(ev){
-
-      var $prueba1=$caja1.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba3=$caja1.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja1.children("div:nth-child(13)").children("input").change(function(ev){
-
-      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja1.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja1.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja1.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja1.children("div:nth-child(3)").children("input").change(function(ev){
-
-      var $prueba1=$caja1.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja1.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=$caja1.children("div:nth-child(13)").children("input")[0].value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =ev.target.value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja1.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
-      console.log(ev);
-
-    })
-
-    $caja2.children("div:nth-child(9)").children("input").change(function(ev){
-
-      var $prueba1=$caja2.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja2.children("div:nth-child(11)").children("input").change(function(ev){
-
-      var $prueba1=$caja2.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba3=$caja2.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja2.children("div:nth-child(13)").children("input").change(function(ev){
-
-      var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja2.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja2.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-
-    })
-    $caja2.children("div:nth-child(3)").children("input").change(function(ev){
-
-      var $prueba1=$caja2.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja2.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=$caja2.children("div:nth-child(13)").children("input")[0].value;
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad = ev.target.value;
-
-      var total = Number(cantidad)*prom;
-
-      $caja2.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
-
-    })
-
-    $caja3.children("div:nth-child(9)").children("input").change(function(ev){
-
-      var $prueba1=$caja3.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-      console.log(ev);
-
-    })
-    $caja3.children("div:nth-child(11)").children("input").change(function(ev){
-
-      var $prueba1=$caja3.children("div:nth-child(13)").children("input")[0].value;
-      var $prueba3=$caja3.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      console.log($prueba2,$prueba1,$prueba3);
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      console.log(prom, cantidad, total);
-
-      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-
-
-    })
-    $caja3.children("div:nth-child(13)").children("input").change(function(ev){
-
-      var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=ev.target.value;
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad =$caja3.children("div:nth-child(3)").children("input")[0].value;
-
-      var total = Number(cantidad)*prom;
-
-      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-      $caja3.children("div:nth-child(15)").children('div.section').children('h3').contents()[0].data=prom.toFixed(2)
-    })
-    $caja3.children("div:nth-child(3)").children("input").change(function(ev){
-
-      var $prueba1=$caja3.children("div:nth-child(9)").children("input")[0].value;
-      var $prueba3=$caja3.children("div:nth-child(11)").children("input")[0].value;
-      var $prueba2=$caja3.children("div:nth-child(13)").children("input")[0].value;
-
-      var prom = (Number($prueba1)+Number($prueba2)+Number($prueba3))/3;
-
-      var cantidad=ev.target.value;
-
-      var total = Number(cantidad)*prom;
-
-      $caja3.children("div:nth-child(14)").children('div.section').children('h3').contents()[0].data=total.toFixed(2)
-
-    })
 
     </script>
   </body>

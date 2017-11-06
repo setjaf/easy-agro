@@ -33,11 +33,7 @@ class NuevaCaja(ModelForm):
     class Meta:
         model = Caja
         fields = ['peso_neto','color','cantidad','tamanio','alto','ancho','largo']
-    def __init__(self, *args, **kwargs):
-        super(NuevaCaja, self).__init__(*args, **kwargs)
 
-        for key in self.fields:
-            self.fields[key].required = True
 class NuevaPrueba(ModelForm):
     class Meta:
         model = Prueba
@@ -45,7 +41,7 @@ class NuevaPrueba(ModelForm):
 class Corrida(ModelForm):
     class Meta:
         model = ProductoCorrida
-        fields=['calibre','kilogramos','fecha_compra','folio','Producto','ProductoCampo']
+        fields=['calibre','kilogramos','folio','Producto','ProductoCampo']
         widget = {
             'fecha_compra': forms.CharField(required=False,widget=forms.TextInput(attrs={'class':'datepicker'})),
             'calibre': forms.ChoiceField(widget=forms.Select())
@@ -82,6 +78,30 @@ class MultiEmUs(MultiModelForm):
     }
 
 class Multiforms(MultiModelForm):
+    form_classes = {
+        'caja':NuevaCaja,
+        'prueba1':NuevaPrueba,
+        'prueba2':NuevaPrueba,
+        'prueba3':NuevaPrueba,
+    }
+
+class CajaNueva1(MultiModelForm):
+    form_classes = {
+        'caja':NuevaCaja,
+        'prueba1':NuevaPrueba,
+        'prueba2':NuevaPrueba,
+        'prueba3':NuevaPrueba,
+    }
+
+class CajaNueva2(MultiModelForm):
+    form_classes = {
+        'caja':NuevaCaja,
+        'prueba1':NuevaPrueba,
+        'prueba2':NuevaPrueba,
+        'prueba3':NuevaPrueba,
+    }
+
+class CajaNueva3(MultiModelForm):
     form_classes = {
         'caja':NuevaCaja,
         'prueba1':NuevaPrueba,

@@ -9,7 +9,7 @@ from django.template import RequestContext, loader
 from inicio.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.forms.models import model_to_dict
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory, modelformset_factory
 from django.conf import settings
 
 from .form import NuevaRecepcion, NuevaCaja, NuevaPrueba, filtroProductor, NuevaCorrida, Multiforms, NuevoEmpleado
@@ -152,14 +152,12 @@ def nuevaCorrida(request, prodc_id=False):
 
             # Inicia proceso de registro de recepción
             form = NuevaCorrida(request.POST)
-            print form['corrida'].has_error.im_self
-            '''if form.is_valid():
+            if form.is_valid():
                 corrida = form['corrida'].save()
                 status = form['status'].save(commit=False)
-                status.IDProductoCampo = corrida
+                status.IDProductoCorrida = corrida
                 status.save()
                 return redirect('/')
-            '''
 
 
             if ("localidad" in request.POST) and ("municipio" in request.POST):
@@ -197,10 +195,13 @@ def nuevaCorrida(request, prodc_id=False):
 
 def nuevaRecepcion(request):
     if request.user.is_authenticated:
-        #----------------------------------------------------------
-        message = None
         form = NuevaRecepcion()
         form2 = filtroProductor()
+        nuevacaja1=Multiforms(prefix='1')
+        nuevacaja2=Multiforms(prefix='2')
+        nuevacaja3=Multiforms(prefix='3')
+        numcajas=1
+        cajas=[nuevacaja1,nuevacaja2,nuevacaja3]
         choices = [(o, o) for o in Productor.objects.values_list(
             'localidad', flat=True).distinct()]
         choices.insert(0, ("---------", "---------"))
@@ -209,19 +210,23 @@ def nuevaRecepcion(request):
             'municipio', flat=True).distinct()]
         choices.insert(0, ("---------", "---------"))
         form2.fields["municipio"].choices = choices
-        # Inicia proceso de registro de recepción
-        #----------------------------------------------------------
-        numform = 1
-        multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
+        context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2}
+
         if request.method == 'POST':
+            # Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
             if "salir" in request.POST:
                 # Si nos estan mandando la informacion correcta realizamos el proceso del logout
                 logout(request)
                 # Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
                 return redirect('/')
-            numform = int(request.POST["numform"])
-            multiformset = formset_factory(
-                Multiforms, extra=numform, max_num=3)
+            nuevacaja1=Multiforms(request.POST,prefix='1')
+            nuevacaja2=Multiforms(request.POST,prefix='2')
+            nuevacaja3=Multiforms(request.POST,prefix='3')
+            form = NuevaRecepcion(request.POST, request.FILES)
+            cajas=[nuevacaja1,nuevacaja2,nuevacaja3]
+            mensaje=''
+            if 'numcajas' in request.POST:
+                numcajas=int(request.POST['numcajas'])
 
             if ("localidad" in request.POST) and ("municipio" in request.POST):
 
@@ -236,117 +241,55 @@ def nuevaRecepcion(request):
                         localidad=request.POST['localidad'], municipio=request.POST['municipio'])
                 form2.fields["localidad"].initial = request.POST['localidad']
                 form2.fields["municipio"].initial = request.POST['municipio']
-                multiformset = formset_factory(
-                    Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
 
-                data.update(request.POST.dict())
-                formset = multiformset(data)
             elif 'agregform' in request.POST:
-                if not request.POST['agregform'] == '3':
-                    numform = int(request.POST['agregform']) + 1
-                multiformset = formset_factory(
-                    Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-                form = NuevaRecepcion(request.POST, request.FILES)
-                data.update(request.POST.dict())
-                formset = multiformset(data)
+                numcajas=int(request.POST['agregform'])
+                if numcajas <= 2:
+                    numcajas=numcajas+1
+
             elif 'borrarform' in request.POST:
-                if not request.POST['borrarform'] == '1':
-                    numform = int(request.POST['borrarform']) - 1
-                multiformset = formset_factory(
-                    Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-                form = NuevaRecepcion(request.POST, request.FILES)
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-
+                numcajas=int(request.POST['borrarform'])
+                if numcajas >= 2:
+                    numcajas=numcajas-1
             else:
-
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-                form = NuevaRecepcion(request.POST, request.FILES)
-
-                for forms in formset:
-                    if not forms.is_valid() or not forms['caja'].is_valid():
-                        context = {'forms': formset, 'form': form,
-                                   'form1': form2, 'nforms': numform,
-                                   'mensaje': 'Llena toda la información de las cajas para poder continuar'}
-                        return HttpResponse(render(request, 'inicio/recepcion.html', context))
-                    for formp in forms:
-                        if formp.data=='' or formp.data=='0' or formp.data==0:
-                            context = {'forms': formset, 'form': form,
-                                       'form1': form2, 'nforms': numform,
-                                       'mensaje': 'Recuerda que no se pueden registrar las cajas si dejas campos vacios o con datos en 0'}
-                            return HttpResponse(render(request, 'inicio/recepcion.html', context))
                 if form.is_valid():
-                    recepcion = form['recepcion'].save(commit=False)
+                    recepcion=form["recepcion"].save(commit=False)
                     recepcion.Empleado = Empleado.objects.get(
                         usuario=request.user)
                     recepcion.save()
-                    status = form['status'].save(commit=False)
-                    status.IDProductoCampo = recepcion
+                    status=form["status"].save(commit=False)
+                    status.IDProductoCampo=recepcion
                     status.save()
-                    if "firma" in request.FILES:
-                        recepcion.firma = request.FILES['firma']
-                        recepcion.save(commit=False)
+                    cajas_validas=0
+                    for caja in cajas:
+                        if caja.is_valid():
+                            cajas_validas+=1
 
-                for forms in formset:
-                    if forms.is_valid():
-                        c = forms['caja'].save(commit=False)
-                        c.ProductoCampo = recepcion
-                        c.save()
-                        p1 = forms['prueba1'].save(commit=False)
-                        p1.Caja = c
-                        p1.save()
-                        p2 = forms['prueba2'].save(commit=False)
-                        p2.Caja = c
-                        p2.save()
-                        p3 = forms['prueba3'].save(commit=False)
-                        p3.Caja = c
-                        p3.save()
-                        print c
-                        print p1
-                        print p2
-                        print p3
-
-                if not status.estado=='c' and not status.estado=='a':
-                    context = {'forms': formset, 'form': form, 'form1': form2,
-                               'nforms': numform, 'mensaje': 'Registro exitoso'}
-                    return HttpResponse(render(request, 'inicio/recepcion.html', context))
+                    if cajas_validas==numcajas:
+                        cajas_guardadas=[]
+                        for i in range(0,numcajas):
+                            caja_nueva=cajas[i].save(commit=False)
+                            caja_nueva["caja"].ProductoCampo=recepcion
+                            caja_nueva["caja"].save()
+                            caja_nueva["prueba1"].Caja=caja_nueva["caja"]
+                            caja_nueva["prueba1"].save()
+                            caja_nueva["prueba2"].Caja=caja_nueva["caja"]
+                            caja_nueva["prueba2"].save()
+                            caja_nueva["prueba3"].Caja=caja_nueva["caja"]
+                            caja_nueva["prueba3"].save()
+                            mensaje='Registro exitoso'
+                            context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2, 'mensaje': mensaje}
+                            if not status.estado=='c' and not status.estado=='a':
+                                return HttpResponse(render(request, 'inicio/recepcion.html',context))
+                            else:
+                                return redirect('/corrida/nueva/'+str(recepcion.IDProductoCampo))
+                    else:
+                        mensaje="Por favor llena todos los datos de las cajas"
                 else:
-                    return redirect('/corrida/nueva'+recepcion.IDProductoCampo)
-                '''if form.is_valid():
-                    m=form.save(commit=False)
-                    print m'''
-            print dir(formset)
-            print formset.validate_max
-            context = {'forms': formset, 'form': form,
-                       'form1': form2, 'nforms': numform}
-            return HttpResponse(render(request, 'inicio/recepcion.html', context))
-        '''for form in multiformset():
-            print(form)'''
-        context = {'forms': multiformset, 'form': form,
-                   'form1': form2, 'nforms': numform}
-        return HttpResponse(render(request, 'inicio/recepcion.html', context))
+                    mensaje="Por favor llena todos los campos"
+            context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2, 'mensaje': mensaje}
+
+        return HttpResponse(render(request, 'inicio/recepcion.html',context))
 
     return redirect('/')
 
@@ -433,6 +376,97 @@ def modRecepcion(request, prodc_id):
 
 
 def prueba(request):
+    form = NuevaRecepcion()
+    form2 = filtroProductor()
+    nuevacaja1=Multiforms(prefix='1')
+    nuevacaja2=Multiforms(prefix='2')
+    nuevacaja3=Multiforms(prefix='3')
+    numcajas=1
+    cajas=[nuevacaja1,nuevacaja2,nuevacaja3]
+    choices = [(o, o) for o in Productor.objects.values_list(
+        'localidad', flat=True).distinct()]
+    choices.insert(0, ("---------", "---------"))
+    form2.fields["localidad"].choices = choices
+    choices = [(o, o) for o in Productor.objects.values_list(
+        'municipio', flat=True).distinct()]
+    choices.insert(0, ("---------", "---------"))
+    form2.fields["municipio"].choices = choices
+    context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2}
+
+    if request.method == 'POST':
+        nuevacaja1=Multiforms(request.POST,prefix='1')
+        nuevacaja2=Multiforms(request.POST,prefix='2')
+        nuevacaja3=Multiforms(request.POST,prefix='3')
+        form = NuevaRecepcion(request.POST, request.FILES)
+        cajas=[nuevacaja1,nuevacaja2,nuevacaja3]
+        mensaje=''
+        if 'numcajas' in request.POST:
+            numcajas=int(request.POST['numcajas'])
+
+        if ("localidad" in request.POST) and ("municipio" in request.POST):
+
+            if request.POST['localidad'] == '---------':
+                form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(
+                    municipio=request.POST['municipio'])
+            elif request.POST['municipio'] == '---------':
+                form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(
+                    localidad=request.POST['localidad'])
+            else:
+                form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(
+                    localidad=request.POST['localidad'], municipio=request.POST['municipio'])
+            form2.fields["localidad"].initial = request.POST['localidad']
+            form2.fields["municipio"].initial = request.POST['municipio']
+
+        elif 'agregform' in request.POST:
+            numcajas=int(request.POST['agregform'])
+            if numcajas <= 2:
+                numcajas=numcajas+1
+
+        elif 'borrarform' in request.POST:
+            numcajas=int(request.POST['borrarform'])
+            if numcajas >= 2:
+                numcajas=numcajas-1
+        else:
+            if form.is_valid():
+                recepcion=form["recepcion"].save(commit=False)
+                recepcion.Empleado = Empleado.objects.get(
+                    usuario=request.user)
+                recepcion.save()
+                status=form["status"].save(commit=False)
+                status.IDProductoCampo=recepcion
+                status.save()
+                cajas_validas=0
+                for caja in cajas:
+                    if caja.is_valid():
+                        cajas_validas+=1
+
+                if cajas_validas==numcajas:
+                    cajas_guardadas=[]
+                    for i in range(0,numcajas):
+                        caja_nueva=cajas[i].save(commit=False)
+                        caja_nueva["caja"].ProductoCampo=recepcion
+                        caja_nueva["caja"].save()
+                        caja_nueva["prueba1"].Caja=caja_nueva["caja"]
+                        caja_nueva["prueba1"].save()
+                        caja_nueva["prueba2"].Caja=caja_nueva["caja"]
+                        caja_nueva["prueba2"].save()
+                        caja_nueva["prueba3"].Caja=caja_nueva["caja"]
+                        caja_nueva["prueba3"].save()
+                        mensaje='Registro exitoso'
+                        context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2, 'mensaje': mensaje}
+                        if not status.estado=='c' and not status.estado=='a':
+                            return HttpResponse(render(request, 'inicio/prueba.html',context))
+                        else:
+                            return redirect('/corrida/nueva/'+str(recepcion.IDProductoCampo))
+                else:
+                    mensaje="Por favor llena todos los datos de las cajas"
+            else:
+                mensaje="Por favor llena todos los campos"
+        context={'cajas':cajas,'numcajas':numcajas,'form':form,'form1': form2, 'mensaje': mensaje}
+
+    return HttpResponse(render(request, 'inicio/prueba.html',context))
+
+'''
     empleado=Empleado.objects.get(usuario=request.user)
     recepciones=ProductoCampo.objects.all().filter(Empleado=empleado).order_by('fecha_recepcion')
     recepcionesLista=[]
@@ -450,7 +484,7 @@ def prueba(request):
     context={'recepciones':recepcionesLista}
     return HttpResponse(render(request, 'inicio/prueba.html',context))
 
-'''
+
     base = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(base, 'static/datos/calibres.json'),"r+") as json_data:
         d = json.load(json_data)
@@ -465,109 +499,7 @@ def prueba(request):
         json_data.write(d)
         json_data.close()
 
-    if request.user.is_authenticated:
-        #----------------------------------------------------------
-        message=None;
-        form = NuevaRecepcion()
-        form2 = filtroProductor()
-        choices = [(o,o) for o in Productor.objects.values_list('localidad', flat=True).distinct()]
-        choices.insert(0, ("---------","---------"))
-        form2.fields["localidad"].choices = choices
-        choices = [(o,o) for o in Productor.objects.values_list('municipio', flat=True).distinct()]
-        choices.insert(0, ("---------","---------"))
-        form2.fields["municipio"].choices = choices
-        #Se verifica si el metodo de envio fue post
-        if request.method == "POST":
-            #Si el metodo es POST significa que quieren hacer un logout, pero revisamos que sea la información correcta con un if
-            if "salir" in request.POST:
-                #Si nos estan mandando la informacion correcta realizamos el proceso del logout
-                logout(request)
-                #Se retorna La función HttpResponse que hace el render de la página del login, con el formulario copmo parametro
-                return redirect('/')
-        #----------------------------------------------------------
-        numform=1
-        multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
-        if request.method=='POST':
-
-            if ("localidad" in request.POST) and ("municipio" in request.POST):
-                if request.POST['localidad']=='---------':
-                    form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(municipio=request.POST['municipio'])
-                elif request.POST['municipio']=='---------':
-                    form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'])
-                else:
-                    form['recepcion'].fields["Productor"].queryset = Productor.objects.filter(localidad=request.POST['localidad'],municipio=request.POST['municipio'])
-                form2.fields["localidad"].initial=request.POST['localidad']
-                form2.fields["municipio"].initial=request.POST['municipio']
-                multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-            elif 'agregform' in request.POST:
-                if not request.POST['agregform']=='3':
-                    numform=int(request.POST['agregform'])+1
-                multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-            elif 'borrarform' in request.POST:
-                if not request.POST['borrarform']=='1':
-                    numform=int(request.POST['borrarform'])-1
-                multiformset = formset_factory(Multiforms, extra=numform, max_num=3)
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-
-            else:
-                data = {
-                    'form-TOTAL_FORMS': multiformset().total_form_count(),
-                    'form-INITIAL_FORMS': multiformset().initial_form_count(),
-                    'form-MAX_NUM_FORMS': '3',
-                }
-
-                data.update(request.POST.dict())
-                formset = multiformset(data)
-                form = NuevaRecepcion(request.POST, request.FILES)
-                if form.is_valid():
-                    recepcion = form['recepcion'].save(commit=False)
-                    recepcion.Empleado = Empleado.objects.get(usuario=request.user)
-                    recepcion.save()
-                    status = form['status'].save(commit=False)
-                    status.IDProductoCampo = recepcion
-                    status.save()
-                    if "firma" in request.FILES:
-                        recepcion.firma=request.FILES['firma']
-                        recepcion.save(commit=False)
-
-                for forms in formset:
-                    if forms.is_valid():
-                        p=forms.save(commit=False)
-                        print p
-
-                    if form.is_valid():
-                        m=form.save(commit=False)
-                        print m
-
-            context={'forms':formset,'form':form,'form1':form2,'nforms':numform}
-            return HttpResponse(render(request, 'inicio/prueba.html', context))
-        for form in multiformset():
-            print(form)
-        context={'forms':multiformset,'form':form,'form1':form2,'nforms':numform}
-        return HttpResponse(render(request, 'inicio/prueba.html', context))'''
+    '''
 
 
 # Create your views here
